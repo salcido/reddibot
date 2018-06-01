@@ -1,0 +1,15 @@
+{
+  "name": "awwtobot",
+  "version": "1.0.0",
+  "description": "Tweets top posts from r/aww",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matthew Salcido",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "twitter": "^1.7.1"
+  }
+}
