@@ -1,13 +1,8 @@
-// fetch posts from r/aww
-// remove non-image posts
-// push results to `queue`
-// pop one result from queue and check to see if it's been tweeted before
-// if it's been tweeted, discard it and get next result (repeat)
-// tweet result
-
+// TODO: get reddit post url
 require('dotenv').config();
 const fetch = require('node-fetch');
 const Twit = require('twit');
+
 const secret = {
   consumer_key: process.env.CONSUMER_KEY,
   consumer_secret: process.env.CONSUMER_SECRET,
@@ -17,10 +12,31 @@ const secret = {
 
 const Twitter = new Twit(secret);
 const url = 'https://www.reddit.com/r/aww/top.json?limit=100';
+const screenName = 'awwtomatic';
+const interval = 60 * 500;
 
 let queue = [];
-let interval = 60 * 1000;
 let timeline = [];
+
+/**
+ * Converts imgur links to actual image url if needed.
+ * @param {array.<object>} posts Posts from r/aww
+ * @returns {array}
+ */
+function handleImgur(posts) {
+
+  return posts.map(p => {
+
+    let id = p.data.url.split('/')[3],
+        { url } = p.data;
+
+    p.data.url = url.includes('.jpg')
+                  ? p.data.url
+                  : `https://i.imgur.com/${id}.jpg`;
+
+    return p;
+  });
+}
 
 /**
  * Converts raw buffer data to base64 string
@@ -42,13 +58,22 @@ function getPosts() {
     .then(res => res.json())
     .then(json => {
 
-      let posts = json.data.children;
-      // let { title, url, is_video, permalink } = post.data;
-      posts = posts.filter(p => !p.data.is_video && !p.data.url.includes('.gif'));
+      let posts = json.data.children,
+          pngs,
+          jpgs,
+          imgur;
 
-      return queue = posts.filter(p => p.data.url.includes('.jpg') || p.data.url.includes('.png'));
+      // Ignore videos and .gif* files
+      posts = posts.filter(p => !p.data.is_video && !p.data.url.includes('.gif'));
+      // Gather up the image-based posts
+      pngs = posts.filter(p => p.data.url.includes('.png'));
+      jpgs = posts.filter(p => p.data.url.includes('.jpg'));
+      imgur = posts.filter(p => p.data.url.includes('imgur.com'));
+      imgur = handleImgur(imgur);
+
+      return queue = [...pngs, ...jpgs, ...imgur];
     });
-    getTimeline();
+  getTimeline();
 }
 
 /**
@@ -66,7 +91,7 @@ async function getNext() {
     console.log(title);
     console.log('queue length: ', queue.length);
 
-    if ( !timeline.some(t => t.text.includes(title.substring(0, 115))) ) {
+    if ( !timeline.some(t => t.text.includes(title.substring(0, 100))) ) {
       return tweet(next);
     }
     return getNext();
@@ -81,7 +106,7 @@ async function getNext() {
  */
 function getTimeline() {
 
-  let params = { screen_name: 'awwwtobot', count: 100 };
+  let params = { screen_name: screenName, count: 100 };
 
   return Twitter.get('statuses/user_timeline', params, (err, data, response) => {
     return timeline = data;
@@ -124,7 +149,7 @@ function tweet(post) {
             });
 
           } else {
-            console.log('Error!!!', err);
+            console.log('There was an error when attempting to post...', err);
           }
         });
       });
