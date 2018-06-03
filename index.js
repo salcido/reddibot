@@ -1,5 +1,6 @@
 require('dotenv').config();
 const fetch = require('node-fetch');
+const sharp = require('sharp');
 const Twit = require('twit');
 
 // ========================================================
@@ -35,6 +36,7 @@ let timeline = [];
  * @returns {string}
  */
 function base64_encode(buffer) {
+  if ( buffer.byteLength > 5000000 ) return resize(Buffer.from(buffer, 'base64'));
   return new Buffer(buffer).toString('base64');
 }
 
@@ -61,7 +63,8 @@ function getNext() {
   if ( queue.length ) {
 
     let next = queue.shift(),
-        { title } = next.data;
+        title = next.data.title;
+
     console.log(' ');
     console.log('Attempting to post...');
     console.log(title);
@@ -140,6 +143,19 @@ function handleImgur(posts) {
 
     return p;
   });
+}
+
+/**
+ * Resizes an image to 1000px wide
+ * @param {string} buffer Raw image data
+ * @returns {string}
+ */
+function resize(buffer) {
+
+  return sharp(buffer)
+          .resize(1000)
+          .toBuffer()
+          .then(data => new Buffer(data).toString('base64'));
 }
 
 /**
