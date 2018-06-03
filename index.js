@@ -29,7 +29,6 @@ let timeline = [];
 // ========================================================
 // Functions (alphabetical)
 // ========================================================
-
 /**
  * Converts raw buffer data to base64 string
  * @param {string} buffer Raw image data
@@ -63,13 +62,15 @@ function getNext() {
 
     let next = queue.shift(),
         { title } = next.data;
-
+    console.log(' ');
+    console.log('Attempting to post...');
     console.log(title);
     console.log('queue length: ', queue.length);
 
     if ( !timeline.some(t => t.text.includes(title.substring(0, 100))) ) {
       return tweet(next);
     }
+    console.log('Seen it. NEXT!!!');
     return getNext();
   }
 
@@ -78,8 +79,8 @@ function getNext() {
 
 /**
  * Gets the top posts from r/aww
- * and removes any posts that are videos.
- * @returns {assignment}
+ * and removes any posts that are gifs or videos
+ * @returns {method}
  */
 function getPosts() {
 
@@ -99,13 +100,13 @@ function getPosts() {
       jpgs = posts.filter(p => p.data.url.includes('.jpg'));
       imgur = posts.filter(p => p.data.url.includes('imgur.com'));
       imgur = handleImgur(imgur);
-
+      // Create our queue of posts
       queue = [...pngs, ...jpgs, ...imgur];
       queue = generateShortLinks(queue);
 
       return queue;
     });
-  getTimeline();
+  return getTimeline();
 }
 
 /**
@@ -116,7 +117,7 @@ function getTimeline() {
 
   let params = { screen_name: screenName, count: 100 };
 
-  return Twitter.get('statuses/user_timeline', params, (err, data, response) => {
+  return Twitter.get('statuses/user_timeline', params, (err, data, res) => {
     return timeline = data;
   });
 }
@@ -142,6 +143,20 @@ function handleImgur(posts) {
 }
 
 /**
+ * Converts common HTML entities into strings
+ * @param {string} title The title from the post
+ * @returns {string}
+ */
+function sanitizeTitle(title) {
+
+  return title = title.replace(/&amp;/g, '&')
+                      .replace(/&gt;/g, '>')
+                      .replace(/&lt;/g, '<')
+                      .replace(/&quot;/g, '"')
+                      .replace(/&#39;/g, '\'');
+}
+
+/**
  * Tweets out the post from r/aww
  * @param {object} post A single post from r/aww
  * @returns {method}
@@ -153,24 +168,24 @@ function tweet(post) {
     .then(base64_encode)
     .then(res => {
 
-      Twitter.post('media/upload', { media_data: res }, (err, data, response) => {
+      Twitter.post('media/upload', { media_data: res }, (err, data, res) => {
 
-        let mediaIdStr = data.media_id_string,
+        let mediaIdStr = newFunction(data),
             meta_params = {
               media_id: mediaIdStr,
-              alt_text: { text: post.data.title }
+              alt_text: { text: sanitizeTitle(post.data.title) }
             };
 
-        Twitter.post('media/metadata/create', meta_params, (err, data, response) => {
+        Twitter.post('media/metadata/create', meta_params, (err, data, res) => {
 
           if ( !err ) {
 
             let params = {
-              status: `${post.data.title} ${post.data.shorty}`,
+              status: `${sanitizeTitle(post.data.title)} ${post.data.shorty}`,
               media_ids: [mediaIdStr]
             };
 
-            Twitter.post('statuses/update', params, (err, data, response) => {
+            Twitter.post('statuses/update', params, (err, data, res) => {
               console.log('Post successfully tweeted!');
               console.log(' ');
               getTimeline();
@@ -179,11 +194,16 @@ function tweet(post) {
           } else {
             console.log(' ');
             console.log('There was an error when attempting to post...');
-            console.log(err);
+            console.error(err);
+            console.log(' ');
           }
         });
       });
     });
+
+  function newFunction(data) {
+    return data.media_id_string;
+  }
 }
 
 // ========================================================
