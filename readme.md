@@ -1,6 +1,9 @@
 # Aww Bot 3000
 
-A simple twitter bot that mirrors top image-based posts to `@awwtomatic` on twitter.com.
+[![Twitter Follow](https://img.shields.io/twitter/follow/awwtomatic.svg?style=social&label=Follow)](https://twitter.com/awwtomatic)
+[![hella awws](https://img.shields.io/badge/aww-100%25-brightgreen.svg)]()
+
+A Twitter bot that mirrors top image-based posts to `@awwtomatic` on twitter.com.
 
 #### Installation
 
