@@ -1,6 +1,8 @@
 # Aww Bot 3000
 
 [![hella awws](https://img.shields.io/badge/aww-100%25-brightgreen.svg)]()
+[![hella awws](https://img.shields.io/badge/%F0%9F%90%B6-bork!-blue.svg)]()
+[![hella awws](https://img.shields.io/badge/%F0%9F%98%B8-meow!-blue.svg)]()
 [![Twitter Follow](https://img.shields.io/twitter/follow/awwtomatic.svg?style=social&label=Follow)](https://twitter.com/awwtomatic)
 
 A Twitter bot that mirrors top image-based posts to twitter.com.
