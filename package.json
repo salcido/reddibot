@@ -1,5 +1,5 @@
 {
-  "name": "awwtobot",
+  "name": "awwbot",
   "version": "1.0.0",
   "description": "Tweets top posts from r/aww",
   "main": "index.js",
@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "author": "Matthew Salcido",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "dotenv": "^5.0.1",
     "node-fetch": "^2.1.2",
