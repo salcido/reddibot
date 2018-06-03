@@ -5,7 +5,7 @@
 [![hella awws](https://img.shields.io/badge/%F0%9F%98%B8-meow!-orange.svg)]()
 [![Twitter Follow](https://img.shields.io/twitter/follow/awwtomatic.svg?style=social&label=Follow)](https://twitter.com/awwtomatic)
 
-A Twitter bot that mirrors top image-based posts to twitter.com.
+A Twitter bot that mirrors top image-based posts from r/aww to twitter.com.
 
 #### Installation
 
