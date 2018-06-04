@@ -1,3 +1,16 @@
+// =======================================================
+//  Overview
+// -------------------------------------------------------
+//  Awwbot mirrors posts from reddit.com's r/aww,
+//  r/rarepuppers, r/awwducational, and r/eyebleach
+//  subreddits for top image-based posts and tweets them.
+// -------------------------------------------------------
+//  @author: Matthew Salcido
+//  @github: https://www.github.com/salcido
+//  @source: https://github.com/salcido/awwbot
+//  @bot-url: https://www.twitter.com/awwtomatic
+// =======================================================
+
 // ========================================================
 // Module Dependencies
 // ========================================================
@@ -31,7 +44,7 @@ const interval = (60 * 1000) * 5;
 // Number of posts to return from each subreddit
 const limit = 50;
 // Bot's twitter handle for timeline data
-const screenName = 'awwtomatic'; // change to 'awwmatic'?
+const screenName = 'awwtomatic'; // change to 'awwmatic'?, // theawwbot
 // Subs to pull posts from
 const subs = ['aww', 'Awwducational', 'rarepuppers', 'Eyebleach'];
 // Minimum number of upvotes a post should have
