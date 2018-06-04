@@ -21,7 +21,8 @@
             "always"
         ],
         "no-console": "off",
-        "no-inner-declarations": "off"
+        "no-inner-declarations": "off",
+        "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false }]
     },
     "parserOptions": {
         "ecmaVersion": 2017,
