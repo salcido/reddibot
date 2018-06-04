@@ -1,8 +1,16 @@
+// ========================================================
+// Module Dependencies
+// ========================================================
 require('dotenv').config();
 const fetch = require('node-fetch');
-const { logo } = require('./logo');
 const sharp = require('sharp');
 const Twit = require('twit');
+
+// ========================================================
+// Assets
+// ========================================================
+const { colors } = require('./assets/colors');
+const { logo } = require('./assets/logo');
 
 // ========================================================
 // Auth values
@@ -34,18 +42,6 @@ const threshold = 500;
 // ========================================================
 let queue = [];
 let timeline = [];
-
-// ========================================================
-// Node logging colors
-// ========================================================
-const colors = {
-  cyan: '\x1b[36m%s\x1b[0m',
-  green: '\x1b[32m',
-  magenta: '\x1b[35m',
-  red: '\x1b[31m',
-  reset: '\x1b[0m',
-  yellow: '\x1b[33m',
-}
 
 // ========================================================
 // Functions (alphabetical)
@@ -265,6 +261,6 @@ function tweet(post) {
 // ========================================================
 // Init
 // ========================================================
-// Start the bot!
+// let's get something positive from the internet for once...
 getAllPosts();
 setInterval(() => getNext(), interval);
