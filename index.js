@@ -1,5 +1,6 @@
 require('dotenv').config();
 const fetch = require('node-fetch');
+const { logo } = require('./logo');
 const sharp = require('sharp');
 const Twit = require('twit');
 
@@ -67,6 +68,7 @@ function generateShortLinks(posts) {
  * @returns {promise}
  */
 function getAllPosts() {
+  console.log(`${logo}`);
   Promise.all(subs.map(getPosts)).then(() => {
     queue = generateShortLinks(queue);
     return getTimeline();
@@ -212,12 +214,14 @@ function tweet(post) {
     .then(base64_encode)
     .then(res => {
 
+      let title = sanitizeTitle(post.data.title);
+
       Twitter.post('media/upload', { media_data: res }, (err, data, res) => {
 
         let mediaIdStr = data.media_id_string,
             meta_params = {
               media_id: mediaIdStr,
-              alt_text: { text: sanitizeTitle(post.data.title) }
+              alt_text: { text: title }
             };
 
         Twitter.post('media/metadata/create', meta_params, (err, data, res) => {
@@ -225,7 +229,7 @@ function tweet(post) {
           if ( !err ) {
 
             let params = {
-              status: `${sanitizeTitle(post.data.title)} ${post.data.shorty}`,
+              status: `${title} ${post.data.shorty}`,
               media_ids: [mediaIdStr]
             };
 
