@@ -26,6 +26,8 @@ const screenName = 'awwtomatic';
 // change to 'awwmatic'?
 // Subs to pull posts from
 const subs = ['aww', 'Awwducational', 'rarepuppers', 'Eyebleach'];
+// Minimum number of upvotes a post should have
+const threshold = 500;
 
 // ========================================================
 // Post queue and twitter timeline arrays
@@ -125,7 +127,7 @@ function getPosts(sub) {
       // make sure the post has at least 500 upvotes
       posts = posts.filter(p => !p.data.is_video
                                 && !p.data.url.includes('.gif')
-                                && p.data.ups >= 500);
+                                && p.data.ups >= threshold);
       // Gather up the image-based posts
       pngs = posts.filter(p => p.data.url.includes('.png'));
       jpgs = posts.filter(p => p.data.url.includes('.jpg'));
@@ -138,12 +140,12 @@ function getPosts(sub) {
 }
 
 /**
- * Returns the 100 most recent tweets from the bot account
+ * Returns the 300 most recent tweets from the bot account
  * @returns {array.<object>}
  */
 function getTimeline() {
 
-  let params = { screen_name: screenName, count: 500 };
+  let params = { screen_name: screenName, count: 300 };
 
   return Twitter.get('statuses/user_timeline', params, (err, data, res) => {
     return timeline = data;
