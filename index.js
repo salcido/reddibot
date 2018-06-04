@@ -44,9 +44,17 @@ const interval = (60 * 1000) * 5;
 // Number of posts to return from each subreddit
 const limit = 50;
 // Bot's twitter handle for timeline data
-const screenName = 'awwtomatic'; // change to 'awwmatic'?, // theawwbot
+const screenName = 'awwtomatic';
+// change to:
+// awwmatic
+// theawwbot
+// _awwbot
+// awwpibot
+
+// add subreddit source as hashtag to tweet
+
 // Subs to pull posts from
-const subs = ['aww', 'Awwducational', 'rarepuppers', 'Eyebleach'];
+const subs = ['aww', 'Awwducational', 'rarepuppers', 'Eyebleach', 'AnimalsBeingDerps'];
 // Minimum number of upvotes a post should have
 const threshold = 500;
 
