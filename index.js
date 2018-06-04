@@ -118,7 +118,7 @@ function getPosts() {
  */
 function getTimeline() {
 
-  let params = { screen_name: screenName, count: 100 };
+  let params = { screen_name: screenName, count: 500 };
 
   return Twitter.get('statuses/user_timeline', params, (err, data, res) => {
     return timeline = data;
