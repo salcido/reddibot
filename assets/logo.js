@@ -1,5 +1,5 @@
 const logo = `
-                                         d8b
+                                        d8b
                                          ?88                 d8P
                                           88b             d888888P
  d888b8b   ?88   d8P  d8P ?88   d8P  d8P  888888b  d8888b   ?88'
