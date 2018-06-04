@@ -1,10 +1,10 @@
 // =======================================================
 //  Overview
-// -------------------------------------------------------
+//  -----------------------------------------------------
 //  Awwbot mirrors posts from reddit.com's r/aww,
 //  r/rarepuppers, r/awwducational, and r/eyebleach
 //  subreddits for top image-based posts and tweets them.
-// -------------------------------------------------------
+//  -----------------------------------------------------
 //  @author: Matthew Salcido
 //  @github: https://www.github.com/salcido
 //  @source: https://github.com/salcido/awwbot
