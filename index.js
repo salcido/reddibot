@@ -23,8 +23,7 @@ const interval = (60 * 1000) * 5;
 // Number of posts to return from each subreddit
 const limit = 50;
 // Bot's twitter handle for timeline data
-const screenName = 'awwtomatic';
-// change to 'awwmatic'?
+const screenName = 'awwtomatic'; // change to 'awwmatic'?
 // Subs to pull posts from
 const subs = ['aww', 'Awwducational', 'rarepuppers', 'Eyebleach'];
 // Minimum number of upvotes a post should have
@@ -35,6 +34,18 @@ const threshold = 500;
 // ========================================================
 let queue = [];
 let timeline = [];
+
+// ========================================================
+// Node logging colors
+// ========================================================
+const colors = {
+  cyan: '\x1b[36m%s\x1b[0m',
+  green: '\x1b[32m',
+  magenta: '\x1b[35m',
+  red: '\x1b[31m',
+  reset: '\x1b[0m',
+  yellow: '\x1b[33m',
+}
 
 // ========================================================
 // Functions (alphabetical)
@@ -68,7 +79,7 @@ function generateShortLinks(posts) {
  * @returns {promise}
  */
 function getAllPosts() {
-  console.log(`${logo}`);
+  console.log(colors.cyan, `${logo}`);
   Promise.all(subs.map(getPosts)).then(() => {
     queue = generateShortLinks(queue);
     return getTimeline();
@@ -88,7 +99,7 @@ function getNext() {
         title = next.data.title;
 
     console.log(' ');
-    console.log('Attempting to post...');
+    console.log(colors.reset, 'Attempting to post...');
     console.log(title);
     console.log('queue length: ', queue.length);
 
@@ -114,7 +125,7 @@ function getPosts(sub) {
 
   let url = `https://www.reddit.com/r/${sub}/top.json?limit=${limit}`;
 
-  console.log('getting posts for ', sub);
+  console.log(colors.yellow, 'getting posts for', sub);
 
     fetch(url, {cache: 'no-cache'})
     .then(res => res.json())
@@ -130,6 +141,7 @@ function getPosts(sub) {
       posts = posts.filter(p => !p.data.is_video
                                 && !p.data.url.includes('.gif')
                                 && p.data.ups >= threshold);
+
       // Gather up the image-based posts
       pngs = posts.filter(p => p.data.url.includes('.png'));
       jpgs = posts.filter(p => p.data.url.includes('.jpg'));
@@ -234,14 +246,14 @@ function tweet(post) {
             };
 
             Twitter.post('statuses/update', params, (err, data, res) => {
-              console.log('Post successfully tweeted!');
+              console.log(colors.green, 'Post successfully tweeted!');
               console.log(' ');
               getTimeline();
             });
 
           } else {
             console.log(' ');
-            console.log('There was an error when attempting to post...');
+            console.log(colors.red, 'There was an error when attempting to post...');
             console.error(err);
             console.log(' ');
           }
