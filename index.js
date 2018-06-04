@@ -16,10 +16,16 @@ const secret = {
 // ========================================================
 // Global vars
 // ========================================================
-const interval = (60 * 1000) * 5;
-const screenName = 'awwtomatic';
 const Twitter = new Twit(secret);
-const url = 'https://www.reddit.com/r/aww/top.json?limit=100';
+// Time between posts and updates
+const interval = (60 * 1000) * 5;
+// Number of posts to return from each subreddit
+const limit = 50;
+// Bot's twitter handle for timeline data
+const screenName = 'awwtomatic';
+// change to 'awwmatic'?
+// Subs to pull posts from
+const subs = ['aww', 'Awwducational', 'rarepuppers', 'Eyebleach'];
 
 // ========================================================
 // Post queue and twitter timeline arrays
@@ -54,6 +60,18 @@ function generateShortLinks(posts) {
 }
 
 /**
+ * Gets posts from each subreddit within the
+ * `subs` array.
+ * @returns {promise}
+ */
+function getAllPosts() {
+  Promise.all(subs.map(getPosts)).then(() => {
+    queue = generateShortLinks(queue);
+    return getTimeline();
+  });
+}
+
+/**
  * Gets the next tweet in the queue
  * or fills the queue with new posts
  * @returns {method}
@@ -73,21 +91,28 @@ function getNext() {
     if ( !timeline.some(t => t.text.includes(title.substring(0, 100))) ) {
       return tweet(next);
     }
+
     console.log('Seen it. NEXT!!!');
     return getNext();
   }
 
-  return getPosts();
+  return getAllPosts();
 }
 
 /**
- * Gets the top posts from r/aww
- * and removes any posts that are gifs or videos
+ * Gets the top posts from a subreddit
+ * and removes any posts that are gifs or videos.
+ * Also updates imgur links to point directly to
+ * the image on imgur.com
  * @returns {method}
  */
-function getPosts() {
+function getPosts(sub) {
 
-  fetch(url, {cache: 'no-cache'})
+  let url = `https://www.reddit.com/r/${sub}/top.json?limit=${limit}`;
+
+  console.log('getting posts for ', sub);
+
+    fetch(url, {cache: 'no-cache'})
     .then(res => res.json())
     .then(json => {
 
@@ -96,20 +121,20 @@ function getPosts() {
           jpgs,
           imgur;
 
-      // Ignore videos and .gif* files
-      posts = posts.filter(p => !p.data.is_video && !p.data.url.includes('.gif'));
+      // Ignore videos and .gif* files;
+      // make sure the post has at least 500 upvotes
+      posts = posts.filter(p => !p.data.is_video
+                                && !p.data.url.includes('.gif')
+                                && p.data.ups >= 500);
       // Gather up the image-based posts
       pngs = posts.filter(p => p.data.url.includes('.png'));
       jpgs = posts.filter(p => p.data.url.includes('.jpg'));
       imgur = posts.filter(p => p.data.url.includes('imgur.com'));
       imgur = handleImgur(imgur);
-      // Create our queue of posts
-      queue = [...pngs, ...jpgs, ...imgur];
-      queue = generateShortLinks(queue);
 
-      return queue;
+      // Update the queue with new posts
+      return queue.push(...pngs, ...jpgs, ...imgur);
     });
-  return getTimeline();
 }
 
 /**
@@ -135,7 +160,7 @@ function handleImgur(posts) {
   return posts.map(p => {
 
     let id = p.data.url.split('/')[3],
-        { url } = p.data;
+        url = p.data.url;
 
     p.data.url = url.includes('.jpg')
                   ? p.data.url
@@ -146,7 +171,8 @@ function handleImgur(posts) {
 }
 
 /**
- * Resizes an image to 1000px wide
+ * Resizes an image to 1000px wide so that
+ * it will be under the 5mb limit Twitter requires
  * @param {string} buffer Raw image data
  * @returns {string}
  */
@@ -173,8 +199,8 @@ function sanitizeTitle(title) {
 }
 
 /**
- * Tweets out the post from r/aww
- * @param {object} post A single post from r/aww
+ * Grabs the post from Reddit and tweets it
+ * @param {object} post A single post from a subreddit
  * @returns {method}
  */
 function tweet(post) {
@@ -186,7 +212,7 @@ function tweet(post) {
 
       Twitter.post('media/upload', { media_data: res }, (err, data, res) => {
 
-        let mediaIdStr = newFunction(data),
+        let mediaIdStr = data.media_id_string,
             meta_params = {
               media_id: mediaIdStr,
               alt_text: { text: sanitizeTitle(post.data.title) }
@@ -216,14 +242,11 @@ function tweet(post) {
         });
       });
     });
-
-  function newFunction(data) {
-    return data.media_id_string;
-  }
 }
 
 // ========================================================
 // Init
 // ========================================================
-getPosts();
+// Start the bot!
+getAllPosts();
 setInterval(() => getNext(), interval);
