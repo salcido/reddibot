@@ -1,4 +1,4 @@
-# Aww Bot 3000
+# Awwbot
 
 [![hella awws](https://img.shields.io/badge/aww-100%25-brightgreen.svg)]()
 [![hella awws](https://img.shields.io/badge/%F0%9F%90%B6-bork!-blue.svg)]()
