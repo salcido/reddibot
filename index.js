@@ -57,7 +57,7 @@ const screenName = 'awwtomatic';
 // Subs to pull posts from
 const subs = ['aww', 'Awwducational', 'rarepuppers', 'Eyebleach', 'AnimalsBeingDerps'];
 // Minimum number of upvotes a post should have
-const threshold = 500;
+const threshold = 1000;
 
 // ========================================================
 // Post queue and twitter timeline arrays
