@@ -40,7 +40,8 @@ const secret = {
 // ========================================================
 const Twitter = new Twit(secret);
 // Time between posts and updates
-const interval = (60 * 1000) * 27;
+// https://en.wikipedia.org/wiki/Pomodoro_Technique
+const interval = (60 * 1000) * 25;
 // Number of posts to return from each subreddit
 const limit = 50;
 // Bot's twitter handle for timeline data
