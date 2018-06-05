@@ -45,12 +45,6 @@ const interval = (60 * 1000) * 5;
 const limit = 50;
 // Bot's twitter handle for timeline data
 const screenName = 'awwtomatic';
-// change to:
-// awwmatic
-// theawwbot
-// _awwbot
-// awwpibot
-// aww_tobot
 
 // add subreddit source as hashtag to tweet
 
