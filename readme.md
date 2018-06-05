@@ -7,6 +7,8 @@
 
 A Twitter bot that mirrors top image-based posts from r/aww, r/awwducational, r/rarepuppers, and r/eyebleach to twitter.com.
 
+https://twitter.com/awwtomatic
+
 #### Installation
 
 * `git clone https://github.com/salcido/awwbot.git` (this repository)
