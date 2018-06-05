@@ -50,6 +50,7 @@ const screenName = 'awwtomatic';
 // theawwbot
 // _awwbot
 // awwpibot
+// aww_tobot
 
 // add subreddit source as hashtag to tweet
 
@@ -96,7 +97,9 @@ function generateShortLinks(posts) {
  * @returns {promise}
  */
 function getAllPosts() {
+  // Show logo on startup
   console.log(colors.cyan, `${logo}`);
+  // Grab our data
   Promise.all(subs.map(getPosts)).then(() => {
     queue = generateShortLinks(queue);
     return getTimeline();
@@ -144,30 +147,34 @@ function getPosts(sub) {
 
   console.log(colors.yellow, 'getting posts for', sub);
 
+  return new Promise((resolve, reject) => {
     fetch(url, {cache: 'no-cache'})
     .then(res => res.json())
     .then(json => {
 
-      let posts = json.data.children,
-          pngs,
+      let filtered,
+          imgur,
           jpgs,
-          imgur;
+          pngs,
+          posts = json.data.children;
 
       // Ignore videos and .gif* files;
       // make sure the post has at least 500 upvotes
-      posts = posts.filter(p => !p.data.is_video
+      filtered = posts.filter(p => !p.data.is_video
                                 && !p.data.url.includes('.gif')
                                 && p.data.ups >= threshold);
 
       // Gather up the image-based posts
-      pngs = posts.filter(p => p.data.url.includes('.png'));
-      jpgs = posts.filter(p => p.data.url.includes('.jpg'));
-      imgur = posts.filter(p => p.data.url.includes('imgur.com'));
+      pngs = filtered.filter(p => p.data.url.includes('.png'));
+      jpgs = filtered.filter(p => p.data.url.includes('.jpg'));
+      imgur = filtered.filter(p => p.data.url.includes('imgur.com'));
       imgur = handleImgur(imgur);
 
       // Update the queue with new posts
-      return queue.push(...pngs, ...jpgs, ...imgur);
+      queue.push(...pngs, ...jpgs, ...imgur);
+      return resolve();
     });
+  });
 }
 
 /**
@@ -258,7 +265,7 @@ function tweet(post) {
           if ( !err ) {
 
             let params = {
-              status: `${title} ${post.data.shorty}`,
+              status: `${title} ${post.data.shorty} \n #${post.data.subreddit}`,
               media_ids: [mediaIdStr]
             };
 
