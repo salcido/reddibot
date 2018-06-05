@@ -46,8 +46,6 @@ const limit = 50;
 // Bot's twitter handle for timeline data
 const screenName = 'awwtomatic';
 
-// add subreddit source as hashtag to tweet
-
 // Subs to pull posts from
 const subs = ['aww', 'Awwducational', 'rarepuppers', 'Eyebleach', 'AnimalsBeingDerps'];
 // Minimum number of upvotes a post should have
