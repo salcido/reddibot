@@ -85,6 +85,24 @@ function generateShortLinks(posts) {
 }
 
 /**
+ * Generates a url that points to the .mp4 version
+ * of a .gifv file on imgur
+ * @param {object} post A post object
+ * @returns {object}
+ */
+function generateVideoUrl(post) {
+
+  let extension = /.gifv$/g,
+    url = post.data.url;
+
+  if (extension.test(url)) {
+    post.data.url = url.slice(0, url.length - 5) + '.mp4';
+  }
+
+  return post;
+}
+
+/**
  * Gets posts from each subreddit within the
  * `subs` array.
  * @returns {promise}
