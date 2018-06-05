@@ -40,7 +40,7 @@ const secret = {
 // ========================================================
 const Twitter = new Twit(secret);
 // Time between posts and updates
-const interval = (60 * 1000) * 5;
+const interval = (60 * 1000) * 27;
 // Number of posts to return from each subreddit
 const limit = 50;
 // Bot's twitter handle for timeline data
@@ -49,7 +49,7 @@ const screenName = 'awwtomatic';
 // Subs to pull posts from
 const subs = ['aww', 'Awwducational', 'rarepuppers', 'Eyebleach', 'AnimalsBeingDerps'];
 // Minimum number of upvotes a post should have
-const threshold = 1000;
+const threshold = 1250;
 
 // ========================================================
 // Post queue and twitter timeline arrays
@@ -92,8 +92,12 @@ function getAllPosts() {
   // Show logo on startup
   console.log(colors.cyan, `${logo}`);
   // Grab our data
-  Promise.all(subs.map(getPosts)).then(() => {
+  Promise.all(subs.map(getPosts))
+  .then(() => {
+    // Process and sort our data
     queue = generateShortLinks(queue);
+    queue = queue.sort(sortPosts);
+
     return getTimeline();
   });
 }
@@ -116,7 +120,11 @@ function getNext() {
     console.log('queue length: ', queue.length);
 
     if ( !timeline.some(t => t.text.includes(title.substring(0, 100))) ) {
-      return tweet(next);
+
+      tweet(next);
+      // Reset the queue after tweeting so that we're only tweeting
+      // the most upvoted, untweeted post every interval
+      return queue = [];
     }
 
     console.log('Seen it. NEXT!!!');
@@ -164,6 +172,7 @@ function getPosts(sub) {
 
       // Update the queue with new posts
       queue.push(...pngs, ...jpgs, ...imgur);
+
       return resolve();
     });
   });
@@ -228,6 +237,19 @@ function sanitizeTitle(title) {
                       .replace(/&lt;/g, '<')
                       .replace(/&quot;/g, '"')
                       .replace(/&#39;/g, '\'');
+}
+
+/**
+ * Compares upvote counts on posts and returns them
+ * from highest to lowest.
+ * @param {object} postA A single post object
+ * @param {object} postB A single post object
+ * @returns {number}
+ */
+function sortPosts(postA, postB) {
+  let a = postA.data.ups,
+      b = postB.data.ups;
+  return a < b ? 1 : ( a > b ? -1 : 0 );
 }
 
 /**
