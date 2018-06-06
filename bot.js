@@ -66,7 +66,7 @@ let timeline = [];
  * @param {string} buffer Raw image data
  * @returns {string}
  */
-function base64_encode(buffer) {
+function base64Encode(buffer) {
 
   if ( buffer.byteLength > 5000000 )  {
     return resize(Buffer.from(buffer, 'base64'));
@@ -97,7 +97,7 @@ function generateImgurUrl(posts) {
 
 /**
  * Creates a shortlink to use in the tweet
- * @param {array.<object>} posts Posts from r/aww
+ * @param {array.<object>} posts Posts from a subreddit
  * @returns {array}
  */
 function generateShortLinks(posts) {
@@ -195,7 +195,7 @@ function getPosts(sub) {
     .then(res => res.json())
     .then(json => {
 
-      let filtered,
+      let images,
           imgur,
           jpgs,
           pngs,
@@ -203,19 +203,19 @@ function getPosts(sub) {
 
       // Ignore videos and .gif* files;
       // make sure the post has at least 500 upvotes
-      filtered = posts.filter(p => !p.data.is_video
-                                && !p.data.url.includes('.gif')
-                                && p.data.ups >= threshold);
+      images = posts.filter(p => !p.data.is_video
+                              && !p.data.url.includes('.gif')
+                              && p.data.ups >= threshold);
+
       // Gather up the image-based posts
-      pngs = filtered.filter(p => p.data.url.includes('.png'));
-      jpgs = filtered.filter(p => p.data.url.includes('.jpg'));
-      imgur = filtered.filter(p => p.data.url.includes('imgur.com')
-                                && !p.data.url.includes('.jpg'));
+      pngs = images.filter(p => p.data.url.includes('.png'));
+      jpgs = images.filter(p => p.data.url.includes('.jpg'));
+      imgur = images.filter(p => p.data.url.includes('imgur.com')
+                              && !p.data.url.includes('.jpg'));
       imgur = generateImgurUrl(imgur);
 
       // Update the queue with new posts
       queue.push(...pngs, ...jpgs, ...imgur);
-
       return resolve();
     });
   });
@@ -284,7 +284,7 @@ function tweet(post) {
 
   fetch(post.data.url)
     .then(res => res.arrayBuffer())
-    .then(base64_encode)
+    .then(base64Encode)
     .then(res => {
 
       let title = sanitizeTitle(post.data.title);
