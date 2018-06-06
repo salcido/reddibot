@@ -1,8 +1,7 @@
 // =======================================================
 //  Overview
 //  -----------------------------------------------------
-//  Awwbot mirrors posts from reddit.com's r/aww,
-//  r/rarepuppers, r/awwducational, and r/eyebleach
+//  Awwbot mirrors posts from various animal/nature
 //  subreddits for top image-based posts and tweets them.
 //  -----------------------------------------------------
 //  @author: Matthew Salcido
@@ -43,12 +42,11 @@ const Twitter = new Twit(secret);
 // https://en.wikipedia.org/wiki/Pomodoro_Technique
 const interval = (60 * 1000) * 25;
 // Number of posts to return from each subreddit
-const limit = 50;
+const limit = 100;
 // Bot's twitter handle for timeline data
 const screenName = 'awwtomatic';
-
 // Subs to pull posts from
-const subs = ['aww', 'Awwducational', 'rarepuppers', 'Eyebleach', 'AnimalsBeingDerps'];
+const subs = ['aww', 'awwducational', 'rarepuppers', 'eyebleach', 'animalsbeingderps', 'superbowl', 'natureisfuckinglit'];
 // Minimum number of upvotes a post should have
 const threshold = 1000;
 
@@ -135,11 +133,9 @@ function getAllPosts() {
   // Show logo on startup
   console.log(colors.cyan, `${logo}`);
   // Grab our data
-  Promise.all(subs.map(getPosts))
-  .then(() => {
-    // Process and sort our data
-    queue = generateShortLinks(queue);
-    queue = queue.sort(sortPosts);
+  getPosts().then(posts => {
+    // Process our post data
+    queue = generateShortLinks(posts);
 
     return getTimeline();
   });
@@ -184,40 +180,40 @@ function getNext() {
  * the image on imgur.com
  * @returns {method}
  */
-function getPosts(sub) {
+function getPosts() {
 
-  let url = `https://www.reddit.com/r/${sub}/top.json?limit=${limit}`;
+  let url = `https://www.reddit.com/r/${subs.join('+')}/top.json?limit=${limit}`;
 
-  console.log(colors.yellow, 'getting posts for', sub);
+  // List subs in query
+  console.log(colors.yellow, 'Gathering new posts...');
 
-  return new Promise((resolve, reject) => {
-    fetch(url, {cache: 'no-cache'})
-    .then(res => res.json())
-    .then(json => {
+  return fetch(url, {cache: 'no-cache'})
+  .then(res => res.json())
+  .then(json => {
 
-      let images,
-          imgur,
-          jpgs,
-          pngs,
-          posts = json.data.children;
+    let images,
+        imgur,
+        jpgs,
+        pngs,
+        posts = json.data.children;
 
-      // Ignore videos and .gif* files;
-      // make sure the post has at least 500 upvotes
-      images = posts.filter(p => !p.data.is_video
-                              && !p.data.url.includes('.gif')
-                              && p.data.ups >= threshold);
+    // Ignore videos and .gif* files;
+    // make sure the post has at least 500 upvotes
+    images = posts.filter(p => !p.data.is_video
+                            && !p.data.url.includes('.gif')
+                            && p.data.ups >= threshold);
 
-      // Gather up the image-based posts
-      pngs = images.filter(p => p.data.url.includes('.png'));
-      jpgs = images.filter(p => p.data.url.includes('.jpg'));
-      imgur = images.filter(p => p.data.url.includes('imgur.com')
-                              && !p.data.url.includes('.jpg'));
-      imgur = generateImgurUrl(imgur);
+    // Gather up the image-based posts
+    pngs = images.filter(p => p.data.url.includes('.png'));
+    jpgs = images.filter(p => p.data.url.includes('.jpg'));
+    imgur = images.filter(p => p.data.url.includes('imgur.com')
+                            && !p.data.url.includes('.jpg'));
+    imgur = generateImgurUrl(imgur);
 
-      // Update the queue with new posts
-      queue.push(...pngs, ...jpgs, ...imgur);
-      return resolve();
-    });
+    // Update the queue with new posts
+    queue.push(...pngs, ...jpgs, ...imgur);
+
+    return queue;
   });
 }
 
@@ -242,10 +238,8 @@ function getTimeline() {
  */
 function resize(buffer) {
 
-  return sharp(buffer)
-          .resize(1000)
-          .toBuffer()
-          .then(data => new Buffer(data).toString('base64'));
+  return sharp(buffer).resize(1000).toBuffer()
+         .then(data => new Buffer(data).toString('base64'));
 }
 
 /**
