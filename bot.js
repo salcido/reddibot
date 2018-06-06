@@ -50,7 +50,7 @@ const screenName = 'awwtomatic';
 // Subs to pull posts from
 const subs = ['aww', 'Awwducational', 'rarepuppers', 'Eyebleach', 'AnimalsBeingDerps'];
 // Minimum number of upvotes a post should have
-const threshold = 1250;
+const threshold = 1000;
 
 // ========================================================
 // Post queue and twitter timeline arrays
@@ -67,8 +67,32 @@ let timeline = [];
  * @returns {string}
  */
 function base64_encode(buffer) {
-  if ( buffer.byteLength > 5000000 ) return resize(Buffer.from(buffer, 'base64'));
+
+  if ( buffer.byteLength > 5000000 )  {
+    return resize(Buffer.from(buffer, 'base64'));
+  }
+
   return new Buffer(buffer).toString('base64');
+}
+
+/**
+ * Converts imgur links to actual image url if needed.
+ * @param {array.<object>} posts Posts from r/aww
+ * @returns {array}
+ */
+function generateImgurUrl(posts) {
+
+  return posts.map(p => {
+
+    let id = p.data.url.split('/')[3],
+        url = p.data.url;
+
+    p.data.url = url.includes('.jpg')
+                  ? p.data.url
+                  : `https://i.imgur.com/${id}.jpg`;
+
+    return p;
+  });
 }
 
 /**
@@ -93,9 +117,9 @@ function generateShortLinks(posts) {
 function generateVideoUrl(post) {
 
   let extension = /.gifv$/g,
-    url = post.data.url;
+      url = post.data.url;
 
-  if (extension.test(url)) {
+  if ( extension.test(url) ) {
     post.data.url = url.slice(0, url.length - 5) + '.mp4';
   }
 
@@ -182,12 +206,12 @@ function getPosts(sub) {
       filtered = posts.filter(p => !p.data.is_video
                                 && !p.data.url.includes('.gif')
                                 && p.data.ups >= threshold);
-
       // Gather up the image-based posts
       pngs = filtered.filter(p => p.data.url.includes('.png'));
       jpgs = filtered.filter(p => p.data.url.includes('.jpg'));
-      imgur = filtered.filter(p => p.data.url.includes('imgur.com'));
-      imgur = handleImgur(imgur);
+      imgur = filtered.filter(p => p.data.url.includes('imgur.com')
+                                && !p.data.url.includes('.jpg'));
+      imgur = generateImgurUrl(imgur);
 
       // Update the queue with new posts
       queue.push(...pngs, ...jpgs, ...imgur);
@@ -207,26 +231,6 @@ function getTimeline() {
 
   return Twitter.get('statuses/user_timeline', params, (err, data, res) => {
     return timeline = data;
-  });
-}
-
-/**
- * Converts imgur links to actual image url if needed.
- * @param {array.<object>} posts Posts from r/aww
- * @returns {array}
- */
-function handleImgur(posts) {
-
-  return posts.map(p => {
-
-    let id = p.data.url.split('/')[3],
-        url = p.data.url;
-
-    p.data.url = url.includes('.jpg')
-                  ? p.data.url
-                  : `https://i.imgur.com/${id}.jpg`;
-
-    return p;
   });
 }
 

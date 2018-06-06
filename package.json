@@ -1,14 +1,14 @@
 {
   "name": "awwbot",
   "version": "1.0.0",
-  "description": "Tweets top posts from r/aww",
-  "main": "index.js",
+  "description": "Tweets top posts from multiple animal subreddits",
+  "main": "bot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node bot.js"
   },
   "author": "Matthew Salcido",
-  "license": "MIT",
+  "license": "GPL",
   "dependencies": {
     "dotenv": "^5.0.1",
     "node-fetch": "^2.1.2",
