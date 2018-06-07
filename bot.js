@@ -10,12 +10,6 @@
 //  @bot-url: https://www.twitter.com/awwtomatic
 // =======================================================
 
-// NOTE: posts from r/aww are dominating the bot's posts
-// TODO: fetch r/aww separately and append to queue
-// or work through subs array sequentially for each post?
-// TODO: wrap getAllPosts in promise so that new posts are
-// fetched just before tweeting.
-
 // ========================================================
 // Module Dependencies
 // ========================================================
@@ -45,8 +39,7 @@ const secret = {
 // ========================================================
 const Twitter = new Twit(secret);
 // Time between posts and updates
-// https://en.wikipedia.org/wiki/Pomodoro_Technique
-const interval = (60 * 1000) * 25;
+const interval = (60 * 1000) * 30;
 // Number of posts to return from each subreddit
 const limit = 100;
 // Bot's twitter handle for timeline data
@@ -155,12 +148,19 @@ function getAllPosts() {
   console.log(colors.cyan, `${logo}`);
   console.log(colors.cyan, 'Next post: ', getTime(-7, 25));
   // Grab our data
-  getPosts().then(posts => {
-    // Process our post data
-    queue = generateShortLinks(posts);
-    queue = queue.sort(alphabetize).reverse();
+  return new Promise((resolve, reject) => {
+    getPosts()
+    .then(posts => {
+      return new Promise((resolve, reject) => {
+        // Process our post data
+        queue = generateShortLinks(posts);
+        queue = queue.sort(alphabetize).reverse();
 
-    return getTimeline();
+        return resolve();
+      })
+    })
+    .then(() => getTimeline())
+    .then(() => resolve())
   });
 }
 
@@ -182,18 +182,15 @@ function getNext() {
     console.log('queue length: ', queue.length);
 
     if ( !timeline.some(t => t.text.includes(title.substring(0, 100))) ) {
-
       tweet(post);
       // Reset the queue after tweeting so that we're only tweeting
       // the most upvoted, untweeted post every interval
       return queue = [];
     }
-
     console.log('Seen it. NEXT!!!');
     return getNext();
   }
-
-  return getAllPosts();
+  return;
 }
 
 /**
@@ -264,12 +261,13 @@ function getTime(offset, nextPostTime = 0) {
  * @returns {array.<object>}
  */
 function getTimeline() {
-
-  let params = { screen_name: screenName, count: 200 };
-
-  return Twitter.get('statuses/user_timeline', params, (err, data, res) => {
-    return timeline = data;
-  });
+  return new Promise((resolve, reject) => {
+    let params = { screen_name: screenName, count: 200 };
+    return Twitter.get('statuses/user_timeline', params, (err, data, res) => {
+      timeline = data;
+      return resolve();
+    });
+  })
 }
 
 /**
@@ -340,7 +338,6 @@ function tweet(post) {
               console.log(colors.green, 'Post successfully tweeted!');
               console.log(colors.green, getTime(-7));
               console.log(' ');
-              getAllPosts();
             });
 
           } else {
@@ -358,5 +355,4 @@ function tweet(post) {
 // Init
 // ========================================================
 // let's get something positive from the internet for once...
-getAllPosts();
-setInterval(() => getNext(), interval);
+setInterval(() => getAllPosts().then(getNext()), interval);
