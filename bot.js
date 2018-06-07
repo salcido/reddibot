@@ -150,8 +150,8 @@ function getNext() {
 
   if ( queue.length ) {
 
-    let next = queue.shift(),
-        title = next.data.title;
+    let post = queue.shift(),
+        title = post.data.title;
 
     console.log(' ');
     console.log(colors.reset, 'Attempting to post...');
@@ -160,7 +160,7 @@ function getNext() {
 
     if ( !timeline.some(t => t.text.includes(title.substring(0, 100))) ) {
 
-      tweet(next);
+      tweet(post);
       // Reset the queue after tweeting so that we're only tweeting
       // the most upvoted, untweeted post every interval
       return queue = [];
@@ -196,6 +196,9 @@ function getPosts() {
         jpgs,
         pngs,
         posts = json.data.children;
+
+    // Replace any necessary characters in the title
+    posts.forEach(p => p.data.title = sanitizeTitle(p.data.title));
 
     // Ignore videos and .gif* files;
     // make sure the upvotes meet the threshold
@@ -270,7 +273,7 @@ function tweet(post) {
     .then(base64Encode)
     .then(res => {
 
-      let title = sanitizeTitle(post.data.title);
+      let title = post.data.title;
 
       Twitter.post('media/upload', { media_data: res }, (err, data, res) => {
 
