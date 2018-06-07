@@ -198,7 +198,7 @@ function getPosts() {
         posts = json.data.children;
 
     // Ignore videos and .gif* files;
-    // make sure the post has at least 500 upvotes
+    // make sure the upvotes meet the threshold
     images = posts.filter(p => !p.data.is_video
                             && !p.data.url.includes('.gif')
                             && p.data.ups >= threshold);
@@ -218,7 +218,7 @@ function getPosts() {
 }
 
 /**
- * Returns the 300 most recent tweets from the bot account
+ * Returns the 200 most recent tweets from the bot account
  * @returns {array.<object>}
  */
 function getTimeline() {
@@ -254,19 +254,6 @@ function sanitizeTitle(title) {
                       .replace(/&lt;/g, '<')
                       .replace(/&quot;/g, '"')
                       .replace(/&#39;/g, '\'');
-}
-
-/**
- * Compares upvote counts on posts and returns them
- * from highest to lowest.
- * @param {object} postA A single post object
- * @param {object} postB A single post object
- * @returns {number}
- */
-function sortPosts(postA, postB) {
-  let a = postA.data.ups,
-      b = postB.data.ups;
-  return a < b ? 1 : ( a > b ? -1 : 0 );
 }
 
 /**
