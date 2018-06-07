@@ -63,6 +63,21 @@ let timeline = [];
 // ========================================================
 // Functions (alphabetical)
 // ========================================================
+
+/**
+ * Alphabetizes posts
+ * @param {object} postA A subreddit post
+ * @param {object} postB A subreddit post
+ * @returns {number}
+ */
+function alphabetize(postA, postB) {
+
+  let a = postA.data.subreddit.toLowerCase(),
+      b = postB.data.subreddit.toLowerCase();
+
+  return a > b ? 1 : (a < b ? -1 : 0);
+}
+
 /**
  * Converts raw buffer data to base64 string
  * @param {string} buffer Raw image data
@@ -140,6 +155,7 @@ function getAllPosts() {
   getPosts().then(posts => {
     // Process our post data
     queue = generateShortLinks(posts);
+    queue = queue.sort(alphabetize).reverse();
 
     return getTimeline();
   });
@@ -261,8 +277,13 @@ function sanitizeTitle(title) {
                       .replace(/&lt;/g, '<')
                       .replace(/&quot;/g, '"')
                       .replace(/&#39;/g, '\'')
-                      .replace(/“/, '"')
-                      .replace(/”/, '"');
+                      .replace(/“/g, '"')
+                      .replace(/”/g, '"')
+                      .replace(/‘/g, '\'')
+                      .replace(/’/g, '\'')
+                      .replace(/&mdash;/g, '-')
+                      .replace(/&ndash;/g, '-')
+                      .replace(/&hellip;/g, '...');
 }
 
 /**
