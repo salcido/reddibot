@@ -46,7 +46,7 @@ const limit = 100;
 // Bot's twitter handle for timeline data
 const screenName = 'awwtomatic';
 // Subs to pull posts from
-const subs = ['aww', 'awwducational', 'rarepuppers', 'eyebleach', 'animalsbeingderps', 'superbowl', 'natureisfuckinglit'];
+const subs = ['aww', 'awwducational', 'rarepuppers', 'eyebleach', 'animalsbeingderps', 'superbowl', 'natureisfuckinglit', 'ilikthebred'];
 // Minimum number of upvotes a post should have
 const threshold = 1000;
 
