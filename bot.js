@@ -253,7 +253,9 @@ function sanitizeTitle(title) {
                       .replace(/&gt;/g, '>')
                       .replace(/&lt;/g, '<')
                       .replace(/&quot;/g, '"')
-                      .replace(/&#39;/g, '\'');
+                      .replace(/&#39;/g, '\'')
+                      .replace(/“/, '"')
+                      .replace(/”/, '"');
 }
 
 /**
