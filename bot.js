@@ -13,6 +13,8 @@
 // NOTE: posts from r/aww are dominating the bot's posts
 // TODO: fetch r/aww separately and append to queue
 // or work through subs array sequentially for each post?
+// TODO: wrap getAllPosts in promise so that new posts are
+// fetched just before tweeting.
 
 // ========================================================
 // Module Dependencies
@@ -151,6 +153,7 @@ function generateVideoUrl(post) {
 function getAllPosts() {
   // Show logo on startup
   console.log(colors.cyan, `${logo}`);
+  console.log(colors.cyan, 'Next post: ', getTime(-7, 25));
   // Grab our data
   getPosts().then(posts => {
     // Process our post data
@@ -245,10 +248,12 @@ function getPosts() {
  * @param {number} offset The UTC time offset
  * @returns {string}
  */
-function getTime(offset) {
+function getTime(offset, nextPostTime = 0) {
 
-  let d = new Date(),
-      utc = d.getTime() + (d.getTimezoneOffset() * 60000),
+  let d = new Date();
+      d.setMinutes(d.getMinutes() + nextPostTime);
+
+  let utc = d.getTime() + (d.getTimezoneOffset() * 60000),
       nd = new Date(utc + (3600000 * offset));
 
   return nd.toLocaleString();
@@ -335,7 +340,7 @@ function tweet(post) {
               console.log(colors.green, 'Post successfully tweeted!');
               console.log(colors.green, getTime(-7));
               console.log(' ');
-              getTimeline();
+              getAllPosts();
             });
 
           } else {
