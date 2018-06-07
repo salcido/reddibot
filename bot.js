@@ -1,14 +1,18 @@
 // =======================================================
 //  Overview
 //  -----------------------------------------------------
-//  Awwbot mirrors posts from various animal/nature
-//  subreddits for top image-based posts and tweets them.
+//  Awwbot mirrors top image-based posts from various
+//  animal/nature subreddits and tweets them.
 //  -----------------------------------------------------
 //  @author: Matthew Salcido
 //  @github: https://www.github.com/salcido
 //  @source: https://github.com/salcido/awwbot
 //  @bot-url: https://www.twitter.com/awwtomatic
 // =======================================================
+
+// NOTE: posts from r/aww are dominating the bot's posts
+// TODO: fetch r/aww separately and append to queue
+// or work through subs array sequentially for each post?
 
 // ========================================================
 // Module Dependencies
