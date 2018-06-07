@@ -289,6 +289,7 @@ function tweet(post) {
 
             Twitter.post('statuses/update', params, (err, data, res) => {
               console.log(colors.green, 'Post successfully tweeted!');
+              console.log(new Date(Date.now()));
               console.log(' ');
               getTimeline();
             });
