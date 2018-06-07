@@ -146,11 +146,11 @@ function generateVideoUrl(post) {
 }
 
 /**
- * Gets posts from each subreddit within the
- * `subs` array.
+ * Gathers post data, mutates it, then
+ * gets twitter timeline data
  * @returns {promise}
  */
-function getAllPosts() {
+function getPostsAndTimeline() {
   // Show logo on startup
   console.log(colors.cyan, `${logo}`);
   console.log(colors.cyan, 'Next post: ', timestamp(utcOffset, minutes));
@@ -164,15 +164,15 @@ function getAllPosts() {
     })
     .then(() => getTimeline())
     .then(() => resolve())
+    .catch(err => console.log(colors.red, 'Error getPostsAndTimeline() ', err));
   });
 }
 
 /**
- * Gets the next tweet in the queue
- * or fills the queue with new posts
+ * Gets the next post in the queue
  * @returns {method}
  */
-function getNext() {
+function getNextPost() {
 
   if ( queue.length ) {
 
@@ -185,13 +185,13 @@ function getNext() {
     console.log('queue length: ', queue.length);
 
     if ( !timeline.some(t => t.text.includes(title.substring(0, 100))) ) {
-      tweet(post);
       // Reset the queue after tweeting so that we're only tweeting
       // the most upvoted, untweeted post every interval
-      return queue = [];
+      queue = [];
+      return tweet(post);
     }
     console.log('Seen it. NEXT!!!');
-    return getNext();
+    return getNextPost();
   }
   return;
 }
@@ -240,7 +240,8 @@ function getPosts() {
     queue.push(...pngs, ...jpgs, ...imgur);
 
     return queue;
-  });
+  })
+  .catch(err => console.log(colors.red, 'Error getPosts() ', err));
 }
 
 /**
@@ -265,7 +266,8 @@ function getTimeline() {
  */
 function resize(buffer) {
   return sharp(buffer).resize(1000).toBuffer()
-         .then(data => new Buffer(data).toString('base64'));
+         .then(data => new Buffer(data).toString('base64'))
+         .catch(err => console.log(colors.red, 'Error resize() ', err));
 }
 
 /**
@@ -352,11 +354,12 @@ function tweet(post) {
           }
         });
       });
-    });
+    })
+    .catch(err => console.log(colors.red, 'Error tweet() ', err));
 }
 
 // ========================================================
 // Init
 // ========================================================
 // let's get something positive from the internet for once...
-setInterval(() => getAllPosts().then(getNext()), interval);
+setInterval(() => getPostsAndTimeline().then(() => getNextPost()), interval);
