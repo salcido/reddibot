@@ -38,8 +38,11 @@ const secret = {
 // Global vars
 // ========================================================
 const Twitter = new Twit(secret);
-// Time between posts and updates
-const interval = (60 * 1000) * 30;
+// Number of minutes between posts and updates;
+const minutes = 40;
+const interval = (60 * 1000) * minutes;
+// const interval = (60 * 100); /* for testing */
+
 // Number of posts to return from each subreddit
 const limit = 100;
 // Bot's twitter handle for timeline data
@@ -47,7 +50,9 @@ const screenName = 'awwtomatic';
 // Subs to pull posts from
 const subs = ['aww', 'awwducational', 'rarepuppers', 'eyebleach', 'animalsbeingderps', 'superbowl', 'ilikthebred'];
 // Minimum number of upvotes a post should have
-const threshold = 1000;
+const threshold = 1100;
+// Timezone offset (for logging fetches and tweets)
+const utcOffset = -7;
 
 // ========================================================
 // Post queue and twitter timeline arrays
@@ -146,18 +151,14 @@ function generateVideoUrl(post) {
 function getAllPosts() {
   // Show logo on startup
   console.log(colors.cyan, `${logo}`);
-  console.log(colors.cyan, 'Next post: ', getTime(-7, 25));
+  console.log(colors.cyan, 'Next post: ', getTime(utcOffset, minutes));
   // Grab our data
   return new Promise((resolve, reject) => {
     getPosts()
     .then(posts => {
-      return new Promise((resolve, reject) => {
-        // Process our post data
-        queue = generateShortLinks(posts);
-        queue = queue.sort(alphabetize).reverse();
-
-        return resolve();
-      })
+      // Process our post data
+      queue = generateShortLinks(posts);
+      queue = queue.sort(alphabetize).reverse();
     })
     .then(() => getTimeline())
     .then(() => resolve())
@@ -243,12 +244,13 @@ function getPosts() {
 /**
  * Returns the local time
  * @param {number} offset The UTC time offset
+ * @param {number} nextTweet Time until the next tweet
  * @returns {string}
  */
-function getTime(offset, nextPostTime = 0) {
+function getTime(offset, nextTweet = 0) {
 
   let d = new Date();
-      d.setMinutes(d.getMinutes() + nextPostTime);
+      d.setMinutes(d.getMinutes() + nextTweet);
 
   let utc = d.getTime() + (d.getTimezoneOffset() * 60000),
       nd = new Date(utc + (3600000 * offset));
@@ -336,7 +338,7 @@ function tweet(post) {
 
             Twitter.post('statuses/update', params, (err, data, res) => {
               console.log(colors.green, 'Post successfully tweeted!');
-              console.log(colors.green, getTime(-7));
+              console.log(colors.green, getTime(utcOffset));
               console.log(' ');
             });
 
