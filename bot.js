@@ -50,7 +50,7 @@ const limit = 100;
 // Bot's twitter handle for timeline data
 const screenName = 'awwtomatic';
 // Subs to pull posts from
-const subs = ['aww', 'awwducational', 'rarepuppers', 'eyebleach', 'animalsbeingderps', 'superbowl', 'natureisfuckinglit', 'ilikthebred'];
+const subs = ['aww', 'awwducational', 'rarepuppers', 'eyebleach', 'animalsbeingderps', 'superbowl', 'ilikthebred'];
 // Minimum number of upvotes a post should have
 const threshold = 1000;
 
@@ -241,6 +241,20 @@ function getPosts() {
 }
 
 /**
+ * Returns the local time
+ * @param {number} offset The UTC time offset
+ * @returns {string}
+ */
+function getTime(offset) {
+
+  let d = new Date(),
+      utc = d.getTime() + (d.getTimezoneOffset() * 60000),
+      nd = new Date(utc + (3600000 * offset));
+
+  return nd.toLocaleString();
+}
+
+/**
  * Returns the 200 most recent tweets from the bot account
  * @returns {array.<object>}
  */
@@ -319,7 +333,7 @@ function tweet(post) {
 
             Twitter.post('statuses/update', params, (err, data, res) => {
               console.log(colors.green, 'Post successfully tweeted!');
-              console.log(new Date(Date.now()));
+              console.log(colors.green, getTime(-7));
               console.log(' ');
               getTimeline();
             });
