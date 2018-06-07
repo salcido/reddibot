@@ -2,13 +2,15 @@
 //  Overview
 //  -----------------------------------------------------
 //  Awwbot mirrors top image-based posts from various
-//  animal/nature subreddits and tweets them.
+//  animal subreddits and tweets them.
 //  -----------------------------------------------------
 //  @author: Matthew Salcido
 //  @github: https://www.github.com/salcido
 //  @source: https://github.com/salcido/awwbot
 //  @bot-url: https://www.twitter.com/awwtomatic
 // =======================================================
+
+// TODO: add DB to store image hashes to check for reposts
 
 // ========================================================
 // Module Dependencies
@@ -151,7 +153,7 @@ function generateVideoUrl(post) {
 function getAllPosts() {
   // Show logo on startup
   console.log(colors.cyan, `${logo}`);
-  console.log(colors.cyan, 'Next post: ', getTime(utcOffset, minutes));
+  console.log(colors.cyan, 'Next post: ', timestamp(utcOffset, minutes));
   // Grab our data
   return new Promise((resolve, reject) => {
     getPosts()
@@ -242,23 +244,6 @@ function getPosts() {
 }
 
 /**
- * Returns the local time
- * @param {number} offset The UTC time offset
- * @param {number} nextTweet Time until the next tweet
- * @returns {string}
- */
-function getTime(offset, nextTweet = 0) {
-
-  let d = new Date();
-      d.setMinutes(d.getMinutes() + nextTweet);
-
-  let utc = d.getTime() + (d.getTimezoneOffset() * 60000),
-      nd = new Date(utc + (3600000 * offset));
-
-  return nd.toLocaleString();
-}
-
-/**
  * Returns the 200 most recent tweets from the bot account
  * @returns {array.<object>}
  */
@@ -279,7 +264,6 @@ function getTimeline() {
  * @returns {string}
  */
 function resize(buffer) {
-
   return sharp(buffer).resize(1000).toBuffer()
          .then(data => new Buffer(data).toString('base64'));
 }
@@ -303,6 +287,24 @@ function sanitizeTitle(title) {
                       .replace(/&mdash;/g, '-')
                       .replace(/&ndash;/g, '-')
                       .replace(/&hellip;/g, '...');
+}
+
+/**
+ * Returns the local time
+ * @param {number} offset The UTC time offset
+ * @param {number} nextTweet Time until the next tweet
+ * @returns {string}
+ */
+function timestamp(offset, nextTweet = 0) {
+
+  let d = new Date();
+
+  d.setMinutes(d.getMinutes() + nextTweet);
+
+  let utc = d.getTime() + (d.getTimezoneOffset() * 60000),
+      nd = new Date(utc + (3600000 * offset));
+
+  return nd.toLocaleString();
 }
 
 /**
@@ -338,7 +340,7 @@ function tweet(post) {
 
             Twitter.post('statuses/update', params, (err, data, res) => {
               console.log(colors.green, 'Post successfully tweeted!');
-              console.log(colors.green, getTime(utcOffset));
+              console.log(colors.green, timestamp(utcOffset));
               console.log(' ');
             });
 
