@@ -21,7 +21,7 @@ const sharp = require('sharp');
 const Twit = require('twit');
 
 // ========================================================
-// Assets
+// Assets / Utilities
 // ========================================================
 const { colors } = require('./assets/colors');
 const { logo } = require('./assets/logo');
