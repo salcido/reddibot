@@ -41,7 +41,7 @@ const secret = {
 // ========================================================
 const Twitter = new Twit(secret);
 // Number of minutes between posts and updates;
-const interval = minutes(30);
+const interval = minutes(35);
 // Number of posts to return from each subreddit
 const limit = 100;
 // Bot's twitter handle for timeline data
@@ -223,7 +223,8 @@ function getPosts() {
     // make sure the upvotes meet the threshold
     images = posts.filter(p => !p.data.is_video
                             && !p.data.url.includes('.gif')
-                            && p.data.ups >= threshold);
+                            && p.data.ups >= threshold
+                            && p.data.title.length <= 280);
 
     // Gather up the image-based posts
     pngs = images.filter(p => p.data.url.includes('.png'));
@@ -268,7 +269,7 @@ function minutes(mins) {
  */
 function printLogo() {
   console.log(colors.cyan, `${logo}`);
-  console.log(colors.cyan, 'Next post: ', timestamp(utcOffset, 40));
+  console.log(colors.cyan, 'Next post: ', timestamp(utcOffset, interval));
 }
 
 /**
@@ -314,7 +315,7 @@ function timestamp(offset, nextTweet = 0) {
 
   let d = new Date();
 
-  d.setMinutes(d.getMinutes() + nextTweet);
+  d.setMinutes(d.getMinutes() + (nextTweet / 60000));
 
   let utc = d.getTime() + (d.getTimezoneOffset() * 60000),
       nd = new Date(utc + (3600000 * offset));
@@ -356,7 +357,9 @@ function tweet(post) {
             Twitter.post('statuses/update', params, (err, data, res) => {
               console.log(colors.green, 'Post successfully tweeted!');
               console.log(colors.green, timestamp(utcOffset));
+              console.log(colors.cyan, 'Next post: ', timestamp(utcOffset, interval));
               console.log(' ');
+              if ( data.errors ) console.log(colors.red, data);
             });
 
           } else {
