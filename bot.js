@@ -25,7 +25,15 @@ const Twit = require('twit');
 // ========================================================
 const { colors } = require('./assets/colors');
 const { logo } = require('./assets/logo');
-
+const { utils: { alphabetize,
+                 generateImgurUrl,
+                 generateShortLinks,
+                 isTextSub,
+                 meta,
+                 minutes,
+                 sanitizeTitle,
+                 timestamp
+                }} = require('./assets/utils');
 // ========================================================
 // Auth values
 // ========================================================
@@ -47,7 +55,19 @@ const limit = 100;
 // Bot's twitter handle for timeline data
 const screenName = 'awwtomatic';
 // Subs to pull posts from
-const subs = ['aww', 'awwducational', 'rarepuppers', 'eyebleach', 'animalsbeingderps', 'superbowl', 'ilikthebred', 'whatswrongwithyourdog'];
+const subs = [
+              'aww',
+              'awwducational',
+              'rarepuppers',
+              'eyebleach',
+              'animalsbeingderps',
+              'superbowl',
+              'ilikthebred',
+              'whatswrongwithyourdog',
+              'Showerthoughts'
+            ];
+// Subs that are 'text-only'
+const textSubs = ['Showerthoughts', 'nocontext'];
 // Minimum number of upvotes a post should have
 const threshold = 1100;
 // Timezone offset (for logging fetches and tweets)
@@ -64,20 +84,6 @@ let timeline = [];
 // ========================================================
 
 /**
- * Alphabetizes posts
- * @param {object} postA A subreddit post
- * @param {object} postB A subreddit post
- * @returns {number}
- */
-function alphabetize(postA, postB) {
-
-  let a = postA.data.subreddit.toLowerCase(),
-      b = postB.data.subreddit.toLowerCase();
-
-  return a > b ? 1 : (a < b ? -1 : 0);
-}
-
-/**
  * Converts raw buffer data to base64 string
  * @param {string} buffer Raw image data
  * @returns {string}
@@ -89,57 +95,6 @@ function base64Encode(buffer) {
   }
 
   return new Buffer(buffer).toString('base64');
-}
-
-/**
- * Converts imgur links to actual image url if needed.
- * @param {array.<object>} posts Posts from r/aww
- * @returns {array}
- */
-function generateImgurUrl(posts) {
-
-  return posts.map(p => {
-
-    let id = p.data.url.split('/')[3],
-        url = p.data.url;
-
-    p.data.url = url.includes('.jpg')
-                  ? p.data.url
-                  : `https://i.imgur.com/${id}.jpg`;
-
-    return p;
-  });
-}
-
-/**
- * Creates a shortlink to use in the tweet
- * @param {array.<object>} posts Posts from a subreddit
- * @returns {array}
- */
-function generateShortLinks(posts) {
-  return posts.map(p => {
-    let shorty = p.data.permalink.split('/')[4];
-    p.data.shorty = `https://redd.it/${shorty}`;
-    return p;
-  });
-}
-
-/**
- * Generates a url that points to the .mp4 version
- * of a .gifv file on imgur
- * @param {object} post A post object
- * @returns {object}
- */
-function generateVideoUrl(post) {
-
-  let extension = /.gifv$/g,
-      url = post.data.url;
-
-  if ( extension.test(url) ) {
-    post.data.url = url.slice(0, url.length - 5) + '.mp4';
-  }
-
-  return post;
 }
 
 /**
@@ -200,7 +155,7 @@ function getPosts() {
 
     texts = posts.filter(p => !p.data.is_video
                            && p.data.title.length <= 280
-                           && p.data.subreddit === 'nocontext');
+                           && isTextSub(p, textSubs));
     // Decorate posts with meta prop
     texts = meta(texts, 'text');
 
@@ -265,27 +220,6 @@ function getTimeline() {
 }
 
 /**
- * Decorates the post object with a `meta` property
- * which is used to determine which method to use
- * when tweeting
- * @param {array.<object>} posts Subreddit posts
- * @param {string} type The type of media in the post
- * @returns {array}
- */
-function meta(posts, type) {
-  posts.forEach(p => p.data.meta = type);
-  return posts;
-}
-
-/**
- * Returns the number of ms between tweets
- * @param {number} mins Number of minutes between tweets
- */
-function minutes(mins) {
-  return (60 * 1000) * mins;
-}
-
-/**
  * Logs the `awwbot` logo in the output
  * @returns {undefined}
  */
@@ -304,45 +238,6 @@ function resize(buffer) {
   return sharp(buffer).resize(1000).toBuffer()
          .then(data => new Buffer(data).toString('base64'))
          .catch(err => console.log(colors.red, 'Error resize() ', err));
-}
-
-/**
- * Converts common HTML entities into strings
- * @param {string} title The title from the post
- * @returns {string}
- */
-function sanitizeTitle(title) {
-
-  return title = title.replace(/&amp;/g, '&')
-                      .replace(/&gt;/g, '>')
-                      .replace(/&lt;/g, '<')
-                      .replace(/&quot;/g, '"')
-                      .replace(/&#39;/g, '\'')
-                      .replace(/“/g, '"')
-                      .replace(/”/g, '"')
-                      .replace(/‘/g, '\'')
-                      .replace(/’/g, '\'')
-                      .replace(/&mdash;/g, '-')
-                      .replace(/&ndash;/g, '-')
-                      .replace(/&hellip;/g, '...');
-}
-
-/**
- * Returns the local time
- * @param {number} offset The UTC time offset
- * @param {number} nextTweet Time until the next tweet
- * @returns {string}
- */
-function timestamp(offset, nextTweet = 0) {
-
-  let d = new Date();
-
-  d.setMinutes(d.getMinutes() + (nextTweet / 60000));
-
-  let utc = d.getTime() + (d.getTimezoneOffset() * 60000),
-      nd = new Date(utc + (3600000 * offset));
-
-  return nd.toLocaleString();
 }
 
 /**
