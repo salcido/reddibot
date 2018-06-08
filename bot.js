@@ -192,10 +192,17 @@ function getPosts() {
         imgur,
         jpgs,
         pngs,
-        posts = json.data.children;
+        posts = json.data.children,
+        texts;
 
     // Replace any necessary characters in the title
     posts.forEach(p => p.data.title = sanitizeTitle(p.data.title));
+
+    texts = posts.filter(p => !p.data.is_video
+                           && p.data.title.length <= 280
+                           && p.data.subreddit === 'nocontext');
+    // Decorate posts with meta prop
+    texts = meta(texts, 'text');
 
     // Ignore videos and .gif* files;
     // make sure the upvotes meet the threshold
@@ -203,16 +210,18 @@ function getPosts() {
                             && !p.data.url.includes('.gif')
                             && p.data.ups >= threshold
                             && p.data.title.length <= 280);
+    // Decorate posts with meta prop
+    images = meta(images, 'image');
 
     // Gather up the image-based posts
-    pngs = images.filter(p => p.data.url.includes('.png'));
+    pngs = images.filter(p => p.data.url && p.data.url.includes('.png'));
     jpgs = images.filter(p => p.data.url.includes('.jpg'));
     imgur = images.filter(p => p.data.url.includes('imgur.com')
                             && !p.data.url.includes('.jpg'));
     imgur = generateImgurUrl(imgur);
 
     // Update the queue with new posts
-    queue.push(...pngs, ...jpgs, ...imgur);
+    queue.push(...pngs, ...jpgs, ...imgur, ...texts);
 
     return queue;
   })
@@ -253,6 +262,19 @@ function getTimeline() {
       return resolve();
     });
   });
+}
+
+/**
+ * Decorates the post object with a `meta` property
+ * which is used to determine which method to use
+ * when tweeting
+ * @param {array.<object>} posts Subreddit posts
+ * @param {string} type The type of media in the post
+ * @returns {array}
+ */
+function meta(posts, type) {
+  posts.forEach(p => p.data.meta = type);
+  return posts;
 }
 
 /**
@@ -330,6 +352,21 @@ function timestamp(offset, nextTweet = 0) {
  */
 function tweet(post) {
 
+  switch (post.data.meta) {
+    case 'text':
+      return tweetText(post);
+    case 'image':
+      return tweetImage(post);
+  }
+}
+
+/**
+ * Tweets an update to Twitter with an image
+ * @param {object} post A post from a subreddit
+ * @returns {undefined}
+ */
+function tweetImage(post) {
+
   fetch(post.data.url)
     .then(res => res.arrayBuffer())
     .then(base64Encode)
@@ -372,6 +409,28 @@ function tweet(post) {
       });
     })
     .catch(err => console.log(colors.red, 'Error tweet() ', err));
+}
+
+/**
+ * Tweets a text-only update to Twitter
+ * @param {object} post A post from a subreddit
+ * @returns {undefined}
+ */
+function tweetText(post) {
+
+  let title = post.data.title,
+      params = {
+        status: `${title} ${post.data.shorty} \n#${post.data.subreddit}`
+      };
+
+  Twitter.post('statuses/update', params, (err, data, response) => {
+    console.log(colors.green, 'Post successfully tweeted!');
+    console.log(colors.green, timestamp(utcOffset));
+    console.log(colors.cyan, 'Next post: ', timestamp(utcOffset, interval));
+    console.log(' ');
+    if ( err ) console.log(colors.red, err);
+    if ( data.errors ) console.log(colors.red, data);
+  });
 }
 
 // ========================================================
