@@ -47,7 +47,7 @@ const limit = 100;
 // Bot's twitter handle for timeline data
 const screenName = 'awwtomatic';
 // Subs to pull posts from
-const subs = ['aww', 'awwducational', 'rarepuppers', 'eyebleach', 'animalsbeingderps', 'superbowl', 'ilikthebred'];
+const subs = ['aww', 'awwducational', 'rarepuppers', 'eyebleach', 'animalsbeingderps', 'superbowl', 'ilikthebred', 'whatswrongwithyourdog'];
 // Minimum number of upvotes a post should have
 const threshold = 1100;
 // Timezone offset (for logging fetches and tweets)
@@ -143,28 +143,6 @@ function generateVideoUrl(post) {
 }
 
 /**
- * Gathers post data, mutates it, then
- * gets twitter timeline data
- * @returns {promise}
- */
-function getPostsAndTimeline() {
-  // Show logo on startup
-  printLogo();
-  // Grab our data
-  return new Promise((resolve, reject) => {
-    getPosts()
-    .then(posts => {
-      // Process our post data
-      queue = generateShortLinks(posts);
-      queue = queue.sort(alphabetize).reverse();
-    })
-    .then(() => getTimeline())
-    .then(() => resolve())
-    .catch(err => console.log(colors.red, 'Error getPostsAndTimeline() ', err));
-  });
-}
-
-/**
  * Gets the next post in the queue
  * @returns {method}
  */
@@ -239,6 +217,28 @@ function getPosts() {
     return queue;
   })
   .catch(err => console.log(colors.red, 'Error getPosts() ', err));
+}
+
+/**
+ * Gathers post data, mutates it, then
+ * gets twitter timeline data
+ * @returns {promise}
+ */
+function getPostsAndTimeline() {
+  // Show logo on startup
+  printLogo();
+  // Grab our data
+  return new Promise((resolve, reject) => {
+    getPosts()
+    .then(posts => {
+      // Process our post data
+      queue = generateShortLinks(posts);
+      queue = queue.sort(alphabetize).reverse();
+    })
+    .then(() => getTimeline())
+    .then(() => resolve())
+    .catch(err => console.log(colors.red, 'Error getPostsAndTimeline() ', err));
+  });
 }
 
 /**
