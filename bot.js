@@ -41,8 +41,7 @@ const secret = {
 // ========================================================
 const Twitter = new Twit(secret);
 // Number of minutes between posts and updates;
-const minutes = 40;
-const interval = (60 * 1000) * minutes;
+const interval = minutes(40);
 // const interval = (60 * 100); /* for testing */
 
 // Number of posts to return from each subreddit
@@ -152,8 +151,7 @@ function generateVideoUrl(post) {
  */
 function getPostsAndTimeline() {
   // Show logo on startup
-  console.log(colors.cyan, `${logo}`);
-  console.log(colors.cyan, 'Next post: ', timestamp(utcOffset, minutes));
+  printLogo();
   // Grab our data
   return new Promise((resolve, reject) => {
     getPosts()
@@ -255,7 +253,24 @@ function getTimeline() {
       timeline = data;
       return resolve();
     });
-  })
+  });
+}
+
+/**
+ * Returns the number of ms between tweets
+ * @param {number} mins Number of minutes between tweets
+ */
+function minutes(mins) {
+  return (60 * 1000) * mins;
+}
+
+/**
+ * Logs the `awwbot` logo in the output
+ * @returns {undefined}
+ */
+function printLogo() {
+  console.log(colors.cyan, `${logo}`);
+  console.log(colors.cyan, 'Next post: ', timestamp(utcOffset, 40));
 }
 
 /**
@@ -362,4 +377,5 @@ function tweet(post) {
 // Init
 // ========================================================
 // let's get something positive from the internet for once...
+printLogo();
 setInterval(() => getPostsAndTimeline().then(() => getNextPost()), interval);
