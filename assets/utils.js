@@ -78,7 +78,7 @@ const utils = {
    */
   isTextSub: function(post, textSubs) {
     return textSubs.some(s => {
-      return textSubs.indexOf(post.data.subreddit) > -1;
+      return post.data.subreddit.toLowerCase().indexOf(s) > -1;
     });
   },
   /**

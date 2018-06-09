@@ -49,25 +49,26 @@ const secret = {
 // ========================================================
 const Twitter = new Twit(secret);
 // Number of minutes between posts and updates;
-const interval = minutes(35);
+const interval = minutes(30);
 // Number of posts to return from each subreddit
 const limit = 100;
 // Bot's twitter handle for timeline data
 const screenName = 'awwtomatic';
 // Subs to pull posts from
 const subs = [
+              'animalsbeingderps',
               'aww',
               'awwducational',
-              'rarepuppers',
               'eyebleach',
-              'animalsbeingderps',
-              'superbowl',
               'ilikthebred',
+              'rarepuppers',
+              'showerthoughts',
+              'superbowl',
               'whatswrongwithyourdog',
-              'Showerthoughts'
+              'woahdude'
             ];
 // Subs that are 'text-only'
-const textSubs = ['Showerthoughts', 'nocontext'];
+const textSubs = ['showerthoughts', 'nocontext'];
 // Minimum number of upvotes a post should have
 const threshold = 1100;
 // Timezone offset (for logging fetches and tweets)
@@ -156,6 +157,7 @@ function getPosts() {
     texts = posts.filter(p => !p.data.is_video
                            && p.data.title.length <= 280
                            && isTextSub(p, textSubs));
+
     // Decorate posts with meta prop
     texts = meta(texts, 'text');
 
@@ -164,7 +166,8 @@ function getPosts() {
     images = posts.filter(p => !p.data.is_video
                             && !p.data.url.includes('.gif')
                             && p.data.ups >= threshold
-                            && p.data.title.length <= 280);
+                            && p.data.title.length <= 280
+                            && !isTextSub(p, textSubs));
     // Decorate posts with meta prop
     images = meta(images, 'image');
 
