@@ -19,7 +19,7 @@ const utils = {
   alphabetize: function(postA, postB) {
 
     let a = postA.data.subreddit.toLowerCase(),
-      b = postB.data.subreddit.toLowerCase();
+        b = postB.data.subreddit.toLowerCase();
 
     return a > b ? 1 : (a < b ? -1 : 0);
   },
@@ -33,7 +33,7 @@ const utils = {
     return posts.map(p => {
 
       let id = p.data.url.split('/')[3],
-        url = p.data.url;
+          url = p.data.url;
 
       p.data.url = url.includes('.jpg') ?
         p.data.url :
@@ -63,7 +63,7 @@ const utils = {
   generateVideoUrl: function(post) {
 
     let extension = /.gifv$/g,
-      url = post.data.url;
+        url = post.data.url;
 
     if (extension.test(url)) {
       post.data.url = url.slice(0, url.length - 5) + '.mp4';
