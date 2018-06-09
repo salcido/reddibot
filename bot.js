@@ -53,7 +53,7 @@ const interval = minutes(30);
 // Number of posts to return from each subreddit
 const limit = 50;
 // Bot's twitter handle for timeline data
-const screenName = 'awwtomatic';
+const screenName = 'reddibot';
 // Subs to pull posts from
 const subs = [
               'animalsbeingderps',
