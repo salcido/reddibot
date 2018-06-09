@@ -51,7 +51,7 @@ const Twitter = new Twit(secret);
 // Number of minutes between posts and updates;
 const interval = minutes(30);
 // Number of posts to return from each subreddit
-const limit = 100;
+const limit = 50;
 // Bot's twitter handle for timeline data
 const screenName = 'awwtomatic';
 // Subs to pull posts from
@@ -60,17 +60,20 @@ const subs = [
               'aww',
               'awwducational',
               'eyebleach',
+              'expectationvsreality',
               'ilikthebred',
+              'imaginarylandscapes',
               'natureisfuckinglit',
               'nocontext',
               'rarepuppers',
               'showerthoughts',
+              'spaceporn',
               'superbowl',
               'whatswrongwithyourdog',
               'woahdude'
             ];
 // Subs that are 'text-only'
-const textSubs = ['showerthoughts', 'nocontext'];
+const textSubs = ['nocontext', 'showerthoughts'];
 // Minimum number of upvotes a post should have
 const threshold = 1100;
 // Timezone offset (for logging fetches and tweets)
@@ -330,7 +333,7 @@ function tweetText(post) {
 
   let title = post.data.title,
       params = {
-        status: `${title} ${post.data.shorty} \n#${post.data.subreddit}`
+        status: `${title} #${post.data.subreddit}  \n${post.data.shorty}`
       };
 
   Twitter.post('statuses/update', params, (err, data, response) => {
