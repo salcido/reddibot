@@ -106,7 +106,8 @@ const utils = {
    * @returns {string}
    */
   sanitizeTitle: function(title) {
-    return title = title.replace(/&amp;/g, '&')
+    return title = title.replace(/\b\.\b/g, '. ')
+                        .replace(/&amp;/g, '&')
                         .replace(/&gt;/g, '>')
                         .replace(/&lt;/g, '<')
                         .replace(/&quot;/g, '"')
