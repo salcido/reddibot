@@ -115,6 +115,7 @@ const utils = {
                         .replace(/”/g, '"')
                         .replace(/‘/g, '\'')
                         .replace(/’/g, '\'')
+                        .replace(/`/g, '\'')
                         .replace(/&mdash;/g, '-')
                         .replace(/&ndash;/g, '-')
                         .replace(/&hellip;/g, '...');
