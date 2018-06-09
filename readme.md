@@ -23,3 +23,8 @@ when you created the app.
 
 * Start the bot:
   * `npm start`
+
+#### Testing
+
+* Testing the bot:
+  * `npm test`
