@@ -61,6 +61,8 @@ const subs = [
               'awwducational',
               'eyebleach',
               'ilikthebred',
+              'natureisfuckinglit',
+              'nocontext',
               'rarepuppers',
               'showerthoughts',
               'superbowl',
@@ -96,6 +98,50 @@ function base64Encode(buffer) {
   }
 
   return new Buffer(buffer).toString('base64');
+}
+
+/**
+ * Filters the posts for images and texts that meet
+ * the posting criteria
+ * @param {array.<object>} posts An array of various subreddit posts
+ * @returns {array}
+ */
+function filterPosts(posts) {
+
+  let images,
+      imgur,
+      jpgs,
+      pngs,
+      texts;
+
+  // Text only posts
+  texts = posts.filter(p => !p.data.is_video
+                         && p.data.title.length <= 280
+                         && isTextSub(p, textSubs));
+  // Decorate posts with meta prop
+  texts = meta(texts, 'text');
+
+  // Ignore videos and .gif* files;
+  // make sure the upvotes meet the threshold
+  images = posts.filter(p => !p.data.is_video
+                          && !p.data.url.includes('.gif')
+                          && p.data.ups >= threshold
+                          && p.data.title.length <= 280
+                          && !isTextSub(p, textSubs));
+  // Decorate posts with meta prop
+  images = meta(images, 'image');
+
+  // Gather up the image-based posts
+  pngs = images.filter(p => p.data.url && p.data.url.includes('.png'));
+  jpgs = images.filter(p => p.data.url.includes('.jpg'));
+  imgur = images.filter(p => p.data.url.includes('imgur.com')
+                          && !p.data.url.includes('.jpg'));
+  imgur = generateImgurUrl(imgur);
+
+  // Update the queue with new posts
+  queue.push(...pngs, ...jpgs, ...imgur, ...texts);
+
+  return queue;
 }
 
 /**
@@ -143,45 +189,10 @@ function getPosts() {
   return fetch(url, {cache: 'no-cache'})
   .then(res => res.json())
   .then(json => {
-
-    let images,
-        imgur,
-        jpgs,
-        pngs,
-        posts = json.data.children,
-        texts;
-
+    let posts = json.data.children;
     // Replace any necessary characters in the title
     posts.forEach(p => p.data.title = sanitizeTitle(p.data.title));
-
-    texts = posts.filter(p => !p.data.is_video
-                           && p.data.title.length <= 280
-                           && isTextSub(p, textSubs));
-
-    // Decorate posts with meta prop
-    texts = meta(texts, 'text');
-
-    // Ignore videos and .gif* files;
-    // make sure the upvotes meet the threshold
-    images = posts.filter(p => !p.data.is_video
-                            && !p.data.url.includes('.gif')
-                            && p.data.ups >= threshold
-                            && p.data.title.length <= 280
-                            && !isTextSub(p, textSubs));
-    // Decorate posts with meta prop
-    images = meta(images, 'image');
-
-    // Gather up the image-based posts
-    pngs = images.filter(p => p.data.url && p.data.url.includes('.png'));
-    jpgs = images.filter(p => p.data.url.includes('.jpg'));
-    imgur = images.filter(p => p.data.url.includes('imgur.com')
-                            && !p.data.url.includes('.jpg'));
-    imgur = generateImgurUrl(imgur);
-
-    // Update the queue with new posts
-    queue.push(...pngs, ...jpgs, ...imgur, ...texts);
-
-    return queue;
+    return posts;
   })
   .catch(err => console.log(colors.red, 'Error getPosts() ', err));
 }
@@ -197,13 +208,14 @@ function getPostsAndTimeline() {
   // Grab our data
   return new Promise((resolve, reject) => {
     getPosts()
+    .then(filterPosts)
     .then(posts => {
       // Process our post data
       queue = generateShortLinks(posts);
       queue = queue.sort(alphabetize).reverse();
     })
-    .then(() => getTimeline())
-    .then(() => resolve())
+    .then(getTimeline)
+    .then(resolve)
     .catch(err => console.log(colors.red, 'Error getPostsAndTimeline() ', err));
   });
 }
@@ -238,7 +250,8 @@ function printLogo() {
  * @returns {string}
  */
 function resize(buffer) {
-  return sharp(buffer).resize(1000).toBuffer()
+  return sharp(buffer)
+         .resize(1000).toBuffer()
          .then(data => new Buffer(data).toString('base64'))
          .catch(err => console.log(colors.red, 'Error resize() ', err));
 }
@@ -249,7 +262,6 @@ function resize(buffer) {
  * @returns {method}
  */
 function tweet(post) {
-
   switch (post.data.meta) {
     case 'text':
       return tweetText(post);
@@ -334,6 +346,5 @@ function tweetText(post) {
 // ========================================================
 // Init
 // ========================================================
-// let's get something positive from the internet for once...
 printLogo();
 setInterval(() => getPostsAndTimeline().then(() => getNextPost()), interval);
