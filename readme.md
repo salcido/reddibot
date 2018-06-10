@@ -5,7 +5,7 @@
 [![hella awws](https://img.shields.io/badge/%F0%9F%98%B8-meow!-orange.svg)]()
 [![Twitter Follow](https://img.shields.io/twitter/follow/reddibot.svg?style=social&label=Follow)](https://twitter.com/reddibot)
 
-A Twitter bot that mirrors top top posts from various subreddits to twitter.com.
+A Twitter bot that mirrors top posts from various subreddits to twitter.com.
 
 https://twitter.com/reddibot
 
