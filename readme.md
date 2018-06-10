@@ -25,7 +25,6 @@ ___
   * natureisfuckinglit
   * nocontext
   * perfectfit
-  * programmerhumor
   * rarepuppers
   * showerthoughts
   * spaceporn
