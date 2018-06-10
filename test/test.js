@@ -17,7 +17,6 @@ const { utils: { alphabetize,
                  filterTexts,
                  generateImgurUrl,
                  generateShortLinks,
-                 isTextSub,
                  meta,
                  minutes,
                  sanitizeTitle
@@ -130,7 +129,7 @@ describe('utility', () => {
           data: {
             is_video: false,
             title: 'A short title',
-            subreddit: 'nocontext',
+            is_self: true,
             ups: 9001
           }
         },
@@ -138,7 +137,7 @@ describe('utility', () => {
           data: {
             is_video: true,
             title: 'A slightly longer title',
-            subreddit: 'funny',
+            is_self: false,
             ups: 420
           }
         }
@@ -148,7 +147,7 @@ describe('utility', () => {
         JSON.stringify([{ data: {
           is_video: false,
           title: 'A short title',
-          subreddit: 'nocontext',
+          is_self: true,
           ups: 9001
         }}]));
     });
@@ -175,16 +174,6 @@ describe('utility', () => {
         JSON.stringify([{ data: { permalink: '/r/a/b/8pr4gv/some_post_title/',
                                   shorty: 'https://redd.it/8pr4gv',}}])
       );
-    });
-  });
-// ========================================================
-// isTextSub
-// ========================================================
-  describe('isTextSub', () => {
-    it('should return true if the subreddit is included in the textsub array', () => {
-      let subs = ['nocontext', 'showerthoughts'],
-          post = { data: { subreddit: 'nocontext'}};
-      assert.equal(isTextSub(post, subs), true);
     });
   });
 // ========================================================
