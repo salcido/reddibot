@@ -1,8 +1,20 @@
+// =======================================================
+//  Overview
+//  -----------------------------------------------------
+//  Unit tests for utilis.js methods
+//  -----------------------------------------------------
+//  @author: Matthew Salcido
+//  @github: https://www.github.com/salcido
+//  @source: https://github.com/salcido/reddibot
+//  @bot-url: https://www.twitter.com/reddibot
+// =======================================================
 const assert = require('assert');
 const { utils: { alphabetize,
+                 filterImages,
                  filterImgur,
                  filterJpgs,
                  filterPngs,
+                 filterTexts,
                  generateImgurUrl,
                  generateShortLinks,
                  isTextSub,
@@ -10,9 +22,14 @@ const { utils: { alphabetize,
                  minutes,
                  sanitizeTitle
                 }} = require('../assets/utils');
-// alphabetize
+// ========================================================
+// Tests
+// ========================================================
+
 describe('utility', () => {
-  // alphabetize
+// ========================================================
+// Alphabetize
+// ========================================================
   describe('alphabetize', () => {
     it('should return 1 when a > b', () => {
       let postA = { data: { subreddit: 'zoro'}},
@@ -34,7 +51,42 @@ describe('utility', () => {
       assert.equal(alphabetize(postA, postB), 0);
     });
   });
-  // filterImgur
+// ========================================================
+// filterImages
+// ========================================================
+  describe('filterImages', () => {
+    it('should return an array of image-based posts', () => {
+      let posts = [
+        {
+          data: {
+            is_video: false,
+            title: 'A short title',
+            subreddit: 'aww',
+            url: 'https://www.reddit.com/r/something.jpg'
+          }
+        },
+        {
+          data: {
+            is_video: false,
+            title: 'A slightly longer title',
+            subreddit: 'nocontext',
+            url: 'https://www.reddit.com/r/something.gif'
+          }
+        }
+      ];
+      assert.equal(
+        JSON.stringify(filterImages(posts)),
+        JSON.stringify([{ data: {
+          is_video: false,
+          title: 'A short title',
+          subreddit: 'aww',
+          url: 'https://www.reddit.com/r/something.jpg'
+        }}]));
+    });
+  });
+// ========================================================
+// filterImagur
+// ========================================================
   describe('filterImgur', () => {
     it('should return an array of imgur posts', () => {
       let images = [{ data: { url: 'https://www.imgur.com/asdf'}},
@@ -44,7 +96,9 @@ describe('utility', () => {
         JSON.stringify([{ data: { url: 'https://www.imgur.com/asdf'}}]));
     });
   });
-  // filterJpgs
+// ========================================================
+// filterJpgs
+// ========================================================
   describe('filterJpgs', () => {
     it('should return an array of jpg posts', () => {
       let images = [{ data: { url: 'https://www.imgur.com/asdf.jpg'}},
@@ -54,7 +108,9 @@ describe('utility', () => {
         JSON.stringify([{ data: { url: 'https://www.imgur.com/asdf.jpg'}}]));
     });
   });
-  // filterPngs
+// ========================================================
+// filterPngs
+// ========================================================
   describe('filterPngs', () => {
     it('should return an array of png posts', () => {
       let images = [{ data: { url: 'https://www.imgur.com/asdf.jpg'}},
@@ -64,7 +120,39 @@ describe('utility', () => {
         JSON.stringify([{ data: { url: 'https://www.imgur.com/qwerty.png'}}]));
     });
   });
-  // generateImgurUrl
+// ========================================================
+// filterTexts
+// ========================================================
+  describe('filterTexts', () => {
+    it('should return an array of text posts', () => {
+      let posts = [
+        {
+          data: {
+            is_video: false,
+            title: 'A short title',
+            subreddit: 'nocontext'
+          }
+        },
+        {
+          data: {
+            is_video: true,
+            title: 'A slightly longer title',
+            subreddit: 'funny'
+          }
+        }
+      ];
+      assert.equal(
+        JSON.stringify(filterTexts(posts)),
+        JSON.stringify([{ data: {
+          is_video: false,
+          title: 'A short title',
+          subreddit: 'nocontext'
+        }}]));
+    });
+  });
+// ========================================================
+// generateImgurUrl
+// ========================================================
   describe('generateImgurUrl', () => {
     it('should rewrite the imgur url', () => {
       let post = [{ data: { url: 'https://www.imgur.com/asdf'}}];
@@ -73,7 +161,9 @@ describe('utility', () => {
         JSON.stringify([{ data: { url: 'https://i.imgur.com/asdf.jpg'}}]));
     });
   });
-  // generateShortLinks
+// ========================================================
+// generateShortLinks
+// ========================================================
   describe('generateShortLinks', () => {
     it('should create a shortlink', () => {
       let post = [{ data: { permalink: '/r/a/b/8pr4gv/some_post_title/'}}];
@@ -84,7 +174,9 @@ describe('utility', () => {
       );
     });
   });
-  // isTextSub
+// ========================================================
+// isTextSub
+// ========================================================
   describe('isTextSub', () => {
     it('should return true if the subreddit is included in the textsub array', () => {
       let subs = ['nocontext', 'showerthoughts'],
@@ -92,7 +184,9 @@ describe('utility', () => {
       assert.equal(isTextSub(post, subs), true);
     });
   });
-  // meta
+// ========================================================
+// meta
+// ========================================================
   describe('meta', () => {
     it('should add the correct meta property to the post object', () => {
       let posts = [{ data: {}}];
@@ -102,13 +196,17 @@ describe('utility', () => {
       );
     });
   });
-  // minutes
+// ========================================================
+// minutes
+// ========================================================
   describe('minutes', () => {
     it('should return 60000 when a value of 1 is passed', () => {
       assert.equal(minutes(1), 60000);
     });
   });
-  // sanitizeTitle
+// ========================================================
+// sanitizeTitle
+// ========================================================
   describe('sanitizeTitle', () => {
     it('should replace the characters in the title', () => {
       let title = 'Someone’s long &amp; boring title with a bunch of &quot;bad&quot; characters.oh boy&hellip;';
