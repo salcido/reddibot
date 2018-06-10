@@ -1,8 +1,10 @@
 # Reddibot
 
 [![hella awws](https://img.shields.io/badge/aww-100%25-brightgreen.svg)]()
-[![hella awws](https://img.shields.io/badge/%F0%9F%90%B6-bork!-blue.svg)]()
-[![hella awws](https://img.shields.io/badge/%F0%9F%98%B8-meow!-orange.svg)]()
+[![hella borks](https://img.shields.io/badge/%F0%9F%90%B6-bork!-blue.svg)]()
+[![hella meows](https://img.shields.io/badge/%F0%9F%98%B8-meow!-orange.svg)]()
+[![hella whoas](https://img.shields.io/badge/%F0%9F%94%A5-whoa!-brightgreen.svg)]()
+[![hella whoas](https://img.shields.io/badge/tests-14%2F14-brightgreen.svg)]()
 [![Twitter Follow](https://img.shields.io/twitter/follow/reddibot.svg?style=social&label=Follow)](https://twitter.com/reddibot)
 
 A Twitter bot that mirrors top posts from various subreddits to twitter.com.
