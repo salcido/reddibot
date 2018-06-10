@@ -7,11 +7,32 @@
 
 A Twitter bot that mirrors top posts from various subreddits to twitter.com.
 
+Current subreddits include:
+
+  * animalsbeingderps
+  * aww
+  * awwducational
+  * coloringcorruptions
+  * engineeringporn
+  * expectationvsreality
+  * eyebleach
+  * ilikthebred
+  * imaginarylandscapes
+  * natureisfuckinglit
+  * nocontext
+  * perfectfit
+  * rarepuppers
+  * showerthoughts
+  * spaceporn
+  * superbowl
+  * whatswrongwithyourdog
+  * woahdude
+
 https://twitter.com/reddibot
 
 #### Installation
 
-* `git clone https://github.com/salcido/awwbot.git` (this repository)
+* `git clone https://github.com/salcido/reddibot.git` (this repository)
 * change into the new directory
 * `npm install`
 
