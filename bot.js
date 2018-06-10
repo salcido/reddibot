@@ -25,13 +25,15 @@ const Twit = require('twit');
 // ========================================================
 const { colors } = require('./assets/colors');
 const { logo } = require('./assets/logo');
+const { subreddits: { subs } } = require('./assets/subreddits');
 const { utils: { alphabetize,
+                 filterImages,
                  filterImgur,
                  filterJpgs,
                  filterPngs,
+                 filterTexts,
                  generateImgurUrl,
                  generateShortLinks,
-                 isTextSub,
                  meta,
                  minutes,
                  sanitizeTitle,
@@ -57,29 +59,6 @@ const interval = minutes(30);
 const limit = 50;
 // Bot's twitter handle for timeline data
 const screenName = 'reddibot';
-// Subs to pull posts from
-const subs = [
-              'animalsbeingderps',
-              'aww',
-              'awwducational',
-              'coloringcorruptions',
-              'engineeringporn',
-              'expectationvsreality',
-              'eyebleach',
-              'ilikthebred',
-              'imaginarylandscapes',
-              'natureisfuckinglit',
-              'nocontext',
-              'perfectfit',
-              'rarepuppers',
-              'showerthoughts',
-              'spaceporn',
-              'superbowl',
-              'whatswrongwithyourdog',
-              'woahdude'
-            ];
-// Subs that are 'text-only'
-const textSubs = ['nocontext', 'showerthoughts'];
 // Timezone offset (for logging fetches and tweets)
 const utcOffset = -7;
 
@@ -122,21 +101,13 @@ function filterPosts(posts) {
       texts;
 
   // Text only posts
-  texts = posts.filter(p => !p.data.is_video
-                         && p.data.title.length <= 280
-                         && isTextSub(p, textSubs));
-  // Decorate posts with meta prop
+  texts = filterTexts(posts);
+  // add meta prop
   texts = meta(texts, 'text');
-
-  // Ignore videos and .gif* files;
-  // make sure the upvotes meet the threshold
-  images = posts.filter(p => !p.data.is_video
-                          && !p.data.url.includes('.gif')
-                          && p.data.title.length <= 280
-                          && !isTextSub(p, textSubs));
-  // Decorate posts with meta prop
+  // Image-based posts
+  images = filterImages(posts);
+  // add meta prop
   images = meta(images, 'image');
-
   // Gather up the image-based posts
   pngs = filterPngs(images);
   jpgs = filterJpgs(images);
