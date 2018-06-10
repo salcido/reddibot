@@ -32,7 +32,7 @@ describe('utility', () => {
     });
   });
   // generateImgurUrl
-  describe('alphabetize', () => {
+  describe('generateImgurUrl', () => {
     it('should rewrite the imgur url', () => {
       let post = [{ data: { url: 'https://www.imgur.com/asdf'}}];
       assert.equal(
