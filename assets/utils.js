@@ -9,6 +9,7 @@
 //  @source: https://github.com/salcido/reddibot
 //  @bot-url: https://www.twitter.com/reddibot
 // =======================================================
+const { subreddits: { textSubs }} = require('./subreddits');
 const utils = {
   /**
    * Alphabetizes posts
@@ -22,6 +23,17 @@ const utils = {
         b = postB.data.subreddit.toLowerCase();
 
     return a > b ? 1 : (a < b ? -1 : 0);
+  },
+  /**
+   * Returns an array of posts with images
+   * @param {array.<object>} posts An array of posts
+   * @returns {array.<object>}
+   */
+  filterImages: function(posts) {
+    return posts.filter(p => !p.data.is_video
+                          && !p.data.url.includes('.gif')
+                          && p.data.title.length <= 280
+                          && !utils.isTextSub(p, textSubs));
   },
   /**
    * Returns an array of posts from imgur
@@ -47,6 +59,16 @@ const utils = {
    */
   filterPngs: function(images) {
     return images.filter(p => p.data.url.includes('.png'));
+  },
+  /**
+   * Returns an array of textbased posts
+   * @param {array.<object>} posts An array of posts
+   * @returns {array.<object>}
+   */
+  filterTexts: function(posts) {
+    return posts.filter(p => !p.data.is_video
+                          && p.data.title.length <= 280
+                          && utils.isTextSub(p, textSubs));
   },
   /**
    * Converts imgur links to actual image url if needed.
