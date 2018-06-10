@@ -2,7 +2,7 @@
 //  Overview
 //  -----------------------------------------------------
 //  Reddibot mirrors top image-based posts from various
-//  animal subreddits and tweets them.
+//  subreddits and tweets them.
 //  -----------------------------------------------------
 //  @author: Matthew Salcido
 //  @github: https://www.github.com/salcido
