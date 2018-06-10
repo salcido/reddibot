@@ -24,6 +24,31 @@ const utils = {
     return a > b ? 1 : (a < b ? -1 : 0);
   },
   /**
+   * Returns an array of posts from imgur
+   * @param {array.<object>} images An array of posts
+   * @returns {array.<object>}
+   */
+  filterImgur: function(images) {
+    return images.filter(p => p.data.url.includes('imgur.com')
+                           && !p.data.url.includes('.jpg'));
+  },
+  /**
+   * Returns an array of posts with .jpg images
+   * @param {array.<object>} images An array of posts
+   * @returns {array.<object>}
+   */
+  filterJpgs: function(images) {
+    return images.filter(p => p.data.url.includes('.jpg'));
+  },
+  /**
+   * Returns an array of posts with .png images
+   * @param {array.<object>} images An array of posts
+   * @returns {array.<object>}
+   */
+  filterPngs: function(images) {
+    return images.filter(p => p.data.url.includes('.png'));
+  },
+  /**
    * Converts imgur links to actual image url if needed.
    * @param {array.<object>} posts Posts from r/aww
    * @returns {array}

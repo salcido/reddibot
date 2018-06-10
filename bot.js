@@ -26,6 +26,9 @@ const Twit = require('twit');
 const { colors } = require('./assets/colors');
 const { logo } = require('./assets/logo');
 const { utils: { alphabetize,
+                 filterImgur,
+                 filterJpgs,
+                 filterPngs,
                  generateImgurUrl,
                  generateShortLinks,
                  isTextSub,
@@ -77,8 +80,6 @@ const subs = [
             ];
 // Subs that are 'text-only'
 const textSubs = ['nocontext', 'showerthoughts'];
-// Minimum number of upvotes a post should have
-const threshold = 1100;
 // Timezone offset (for logging fetches and tweets)
 const utcOffset = -7;
 
@@ -131,18 +132,15 @@ function filterPosts(posts) {
   // make sure the upvotes meet the threshold
   images = posts.filter(p => !p.data.is_video
                           && !p.data.url.includes('.gif')
-                          && p.data.ups >= threshold
                           && p.data.title.length <= 280
                           && !isTextSub(p, textSubs));
   // Decorate posts with meta prop
   images = meta(images, 'image');
 
   // Gather up the image-based posts
-  pngs = images.filter(p => p.data.url && p.data.url.includes('.png'));
-  jpgs = images.filter(p => p.data.url.includes('.jpg'));
-  imgur = images.filter(p => p.data.url.includes('imgur.com')
-                          && !p.data.url.includes('.jpg'));
-  imgur = generateImgurUrl(imgur);
+  pngs = filterPngs(images);
+  jpgs = filterJpgs(images);
+  imgur = generateImgurUrl(filterImgur(images));
 
   // Update the queue with new posts
   queue.push(...pngs, ...jpgs, ...imgur, ...texts);
