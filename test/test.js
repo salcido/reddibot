@@ -1,5 +1,8 @@
 const assert = require('assert');
 const { utils: { alphabetize,
+                 filterImgur,
+                 filterJpgs,
+                 filterPngs,
                  generateImgurUrl,
                  generateShortLinks,
                  isTextSub,
@@ -29,6 +32,36 @@ describe('utility', () => {
       let postA = { data: { subreddit: 'alpha'}},
           postB = { data: { subreddit: 'alpha'}};
       assert.equal(alphabetize(postA, postB), 0);
+    });
+  });
+  // filterImgur
+  describe('filterImgur', () => {
+    it('should return an array of imgur posts', () => {
+      let images = [{ data: { url: 'https://www.imgur.com/asdf'}},
+                    { data: { url: 'https://www.imgur.com/qwerty.jpg'}}];
+      assert.equal(
+        JSON.stringify(filterImgur(images)),
+        JSON.stringify([{ data: { url: 'https://www.imgur.com/asdf'}}]));
+    });
+  });
+  // filterJpgs
+  describe('filterJpgs', () => {
+    it('should return an array of jpg posts', () => {
+      let images = [{ data: { url: 'https://www.imgur.com/asdf.jpg'}},
+                    { data: { url: 'https://www.imgur.com/qwerty.png'}}];
+      assert.equal(
+        JSON.stringify(filterJpgs(images)),
+        JSON.stringify([{ data: { url: 'https://www.imgur.com/asdf.jpg'}}]));
+    });
+  });
+  // filterPngs
+  describe('filterPngs', () => {
+    it('should return an array of png posts', () => {
+      let images = [{ data: { url: 'https://www.imgur.com/asdf.jpg'}},
+                    { data: { url: 'https://www.imgur.com/qwerty.png'}}];
+      assert.equal(
+        JSON.stringify(filterPngs(images)),
+        JSON.stringify([{ data: { url: 'https://www.imgur.com/qwerty.png'}}]));
     });
   });
   // generateImgurUrl
