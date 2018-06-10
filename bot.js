@@ -1,13 +1,13 @@
 // =======================================================
 //  Overview
 //  -----------------------------------------------------
-//  Awwbot mirrors top image-based posts from various
+//  Reddibot mirrors top image-based posts from various
 //  animal subreddits and tweets them.
 //  -----------------------------------------------------
 //  @author: Matthew Salcido
 //  @github: https://www.github.com/salcido
-//  @source: https://github.com/salcido/awwbot
-//  @bot-url: https://www.twitter.com/awwtomatic
+//  @source: https://github.com/salcido/reddibot
+//  @bot-url: https://www.twitter.com/reddibot
 // =======================================================
 
 // TODO: add DB to store image hashes to check for reposts

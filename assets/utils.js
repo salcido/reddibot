@@ -6,8 +6,8 @@
 //  -----------------------------------------------------
 //  @author: Matthew Salcido
 //  @github: https://www.github.com/salcido
-//  @source: https://github.com/salcido/awwbot
-//  @bot-url: https://www.twitter.com/awwtomatic
+//  @source: https://github.com/salcido/reddibot
+//  @bot-url: https://www.twitter.com/reddibot
 // =======================================================
 const utils = {
   /**

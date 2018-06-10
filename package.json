@@ -1,7 +1,7 @@
 {
-  "name": "awwbot",
+  "name": "reddibot",
   "version": "1.0.0",
-  "description": "Tweets top posts from multiple animal subreddits",
+  "description": "Tweets top posts from various subreddits",
   "main": "bot.js",
   "scripts": {
     "test": "mocha",
