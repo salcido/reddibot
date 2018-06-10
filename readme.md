@@ -1,13 +1,13 @@
-# Awwbot
+# Reddibot
 
 [![hella awws](https://img.shields.io/badge/aww-100%25-brightgreen.svg)]()
 [![hella awws](https://img.shields.io/badge/%F0%9F%90%B6-bork!-blue.svg)]()
 [![hella awws](https://img.shields.io/badge/%F0%9F%98%B8-meow!-orange.svg)]()
-[![Twitter Follow](https://img.shields.io/twitter/follow/awwtomatic.svg?style=social&label=Follow)](https://twitter.com/awwtomatic)
+[![Twitter Follow](https://img.shields.io/twitter/follow/reddibot.svg?style=social&label=Follow)](https://twitter.com/reddibot)
 
-A Twitter bot that mirrors top image-based posts based on a curated list of subreddits to twitter.com.
+A Twitter bot that mirrors top top posts from various subreddits to twitter.com.
 
-https://twitter.com/awwtomatic
+https://twitter.com/reddibot
 
 #### Installation
 
