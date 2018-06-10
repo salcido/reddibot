@@ -85,7 +85,7 @@ describe('utility', () => {
     });
   });
 // ========================================================
-// filterImagur
+// filterImgur
 // ========================================================
   describe('filterImgur', () => {
     it('should return an array of imgur posts', () => {
@@ -130,14 +130,16 @@ describe('utility', () => {
           data: {
             is_video: false,
             title: 'A short title',
-            subreddit: 'nocontext'
+            subreddit: 'nocontext',
+            ups: 9001
           }
         },
         {
           data: {
             is_video: true,
             title: 'A slightly longer title',
-            subreddit: 'funny'
+            subreddit: 'funny',
+            ups: 420
           }
         }
       ];
@@ -146,7 +148,8 @@ describe('utility', () => {
         JSON.stringify([{ data: {
           is_video: false,
           title: 'A short title',
-          subreddit: 'nocontext'
+          subreddit: 'nocontext',
+          ups: 9001
         }}]));
     });
   });
