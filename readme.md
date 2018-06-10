@@ -7,6 +7,9 @@
 
 A Twitter bot that mirrors top posts from various subreddits to twitter.com.
 
+https://twitter.com/reddibot
+___
+
 Current subreddits include:
 
   * animalsbeingderps
@@ -28,7 +31,7 @@ Current subreddits include:
   * whatswrongwithyourdog
   * woahdude
 
-https://twitter.com/reddibot
+___
 
 #### Installation
 
@@ -49,3 +52,5 @@ when you created the app.
 
 * Testing the bot:
   * `npm test`
+
+___
