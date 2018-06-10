@@ -10,7 +10,7 @@ A Twitter bot that mirrors top posts from various subreddits to twitter.com.
 https://twitter.com/reddibot
 ___
 
-Current subreddits include:
+#### Current subreddits include:
 
   * animalsbeingderps
   * aww
