@@ -78,11 +78,9 @@ let timeline = [];
  * @returns {string}
  */
 function base64Encode(buffer) {
-
   if ( buffer.byteLength > 5000000 )  {
     return resize(Buffer.from(buffer, 'base64'));
   }
-
   return new Buffer(buffer).toString('base64');
 }
 
