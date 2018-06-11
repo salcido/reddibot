@@ -102,17 +102,14 @@ function filterPosts(posts) {
 
   // Text only posts
   texts = filterTexts(posts);
-  // add meta prop
   texts = meta(texts, 'text');
   // Image-based posts
   images = filterImages(posts);
-  // add meta prop
   images = meta(images, 'image');
   // Gather up the image-based posts
   pngs = filterPngs(images);
   jpgs = filterJpgs(images);
   imgur = generateImgurUrl(filterImgur(images));
-
   // Update the queue with new posts
   queue.push(...pngs, ...jpgs, ...imgur, ...texts);
 
@@ -232,7 +229,7 @@ function resize(buffer) {
 }
 
 /**
- * Grabs the post from Reddit and tweets it
+ * Tweets a post based on it's `meta` prop
  * @param {object} post A single post from a subreddit
  * @returns {method}
  */
