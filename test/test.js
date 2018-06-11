@@ -171,8 +171,12 @@ describe('Utility unit tests:', () => {
       let post = [{ data: { permalink: '/r/a/b/8pr4gv/some_post_title/'}}];
       assert.deepEqual(
         generateShortLinks(post),
-        [{ data: { permalink: '/r/a/b/8pr4gv/some_post_title/',
-                                  shorty: 'https://redd.it/8pr4gv',}}]
+        [{
+          data: {
+            permalink: '/r/a/b/8pr4gv/some_post_title/',
+            shorty: 'https://redd.it/8pr4gv',
+          }
+        }]
       );
     });
   });
