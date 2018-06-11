@@ -31,8 +31,8 @@ const utils = {
   filterImages: function(posts) {
     return posts.filter(p => !p.data.is_video
                           && !p.data.url.includes('.gif')
-                          && p.data.title.length <= 280
-                          && !p.data.is_self);
+                          && !p.data.is_self
+                          && p.data.title.length <= 280);
   },
   /**
    * Returns an array of posts from imgur
@@ -82,9 +82,9 @@ const utils = {
       let id = p.data.url.split('/')[3],
           url = p.data.url;
 
-      p.data.url = url.includes('.jpg') ?
-        p.data.url :
-        `https://i.imgur.com/${id}.jpg`;
+      p.data.url = url.includes('.jpg')
+                    ? p.data.url
+                    : `https://i.imgur.com/${id}.jpg`;
 
       return p;
     });
@@ -112,7 +112,7 @@ const utils = {
     let extension = /.gifv$/g,
         url = post.data.url;
 
-    if (extension.test(url)) {
+    if ( extension.test(url) ) {
       post.data.url = url.slice(0, url.length - 5) + '.mp4';
     }
 
