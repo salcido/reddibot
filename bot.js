@@ -269,7 +269,7 @@ function tweetImage(post) {
           if ( !err ) {
 
             let params = {
-              status: `${title} ${post.data.shorty} \n#${post.data.subreddit}`,
+              status: `${title} \n${post.data.shorty} \n#${post.data.subreddit}`,
               media_ids: [mediaIdStr]
             };
 
