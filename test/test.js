@@ -73,14 +73,14 @@ describe('Utility unit tests:', () => {
           }
         }
       ];
-      assert.equal(
-        JSON.stringify(filterImages(posts)),
-        JSON.stringify([{ data: {
+      assert.deepEqual(
+        filterImages(posts),
+        [{ data: {
           is_video: false,
           title: 'A short title',
           subreddit: 'aww',
           url: 'https://www.reddit.com/r/something.jpg'
-        }}]));
+        }}]);
     });
   });
 // ========================================================
@@ -90,9 +90,9 @@ describe('Utility unit tests:', () => {
     it('should return an array of imgur posts', () => {
       let images = [{ data: { url: 'https://www.imgur.com/asdf'}},
                     { data: { url: 'https://www.imgur.com/qwerty.jpg'}}];
-      assert.equal(
-        JSON.stringify(filterImgur(images)),
-        JSON.stringify([{ data: { url: 'https://www.imgur.com/asdf'}}]));
+      assert.deepEqual(
+        filterImgur(images),
+        [{ data: { url: 'https://www.imgur.com/asdf'}}]);
     });
   });
 // ========================================================
@@ -102,9 +102,9 @@ describe('Utility unit tests:', () => {
     it('should return an array of jpg posts', () => {
       let images = [{ data: { url: 'https://www.imgur.com/asdf.jpg'}},
                     { data: { url: 'https://www.imgur.com/qwerty.png'}}];
-      assert.equal(
-        JSON.stringify(filterJpgs(images)),
-        JSON.stringify([{ data: { url: 'https://www.imgur.com/asdf.jpg'}}]));
+      assert.deepEqual(
+        filterJpgs(images),
+        [{ data: { url: 'https://www.imgur.com/asdf.jpg'}}]);
     });
   });
 // ========================================================
@@ -114,9 +114,9 @@ describe('Utility unit tests:', () => {
     it('should return an array of png posts', () => {
       let images = [{ data: { url: 'https://www.imgur.com/asdf.jpg'}},
                     { data: { url: 'https://www.imgur.com/qwerty.png'}}];
-      assert.equal(
-        JSON.stringify(filterPngs(images)),
-        JSON.stringify([{ data: { url: 'https://www.imgur.com/qwerty.png'}}]));
+      assert.deepEqual(
+        filterPngs(images),
+        [{ data: { url: 'https://www.imgur.com/qwerty.png'}}]);
     });
   });
 // ========================================================
@@ -142,14 +142,14 @@ describe('Utility unit tests:', () => {
           }
         }
       ];
-      assert.equal(
-        JSON.stringify(filterTexts(posts)),
-        JSON.stringify([{ data: {
+      assert.deepEqual(
+        filterTexts(posts),
+        [{ data: {
           is_video: false,
           title: 'A short title',
           is_self: true,
           ups: 9001
-        }}]));
+        }}]);
     });
   });
 // ========================================================
@@ -158,9 +158,9 @@ describe('Utility unit tests:', () => {
   describe('generateImgurUrl', () => {
     it('should rewrite the imgur url', () => {
       let post = [{ data: { url: 'https://www.imgur.com/asdf'}}];
-      assert.equal(
-        JSON.stringify(generateImgurUrl(post)),
-        JSON.stringify([{ data: { url: 'https://i.imgur.com/asdf.jpg'}}]));
+      assert.deepEqual(
+        generateImgurUrl(post),
+        [{ data: { url: 'https://i.imgur.com/asdf.jpg'}}]);
     });
   });
 // ========================================================
@@ -169,10 +169,14 @@ describe('Utility unit tests:', () => {
   describe('generateShortLinks', () => {
     it('should create a shortlink', () => {
       let post = [{ data: { permalink: '/r/a/b/8pr4gv/some_post_title/'}}];
-      assert.equal(
-        JSON.stringify(generateShortLinks(post)),
-        JSON.stringify([{ data: { permalink: '/r/a/b/8pr4gv/some_post_title/',
-                                  shorty: 'https://redd.it/8pr4gv',}}])
+      assert.deepEqual(
+        generateShortLinks(post),
+        [{
+          data: {
+            permalink: '/r/a/b/8pr4gv/some_post_title/',
+            shorty: 'https://redd.it/8pr4gv',
+          }
+        }]
       );
     });
   });
@@ -182,9 +186,9 @@ describe('Utility unit tests:', () => {
   describe('meta', () => {
     it('should add the correct meta property to the post object', () => {
       let posts = [{ data: {}}];
-      assert.equal(
-        JSON.stringify(meta(posts, 'text')),
-        JSON.stringify([{ data: { meta: 'text'}}])
+      assert.deepEqual(
+        meta(posts, 'text'),
+        [{ data: { meta: 'text'}}]
       );
     });
   });
