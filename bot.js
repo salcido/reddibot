@@ -10,8 +10,6 @@
 //  @bot-url: https://www.twitter.com/reddibot
 // =======================================================
 
-// TODO: add DB to store image hashes to check for reposts
-
 // ========================================================
 // Module Dependencies
 // ========================================================
