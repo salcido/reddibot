@@ -298,7 +298,7 @@ function tweetText(post) {
 
   let title = post.data.title,
       params = {
-        status: `${title} #${post.data.subreddit}  \n${post.data.shorty}`
+        status: `${title} \n#${post.data.subreddit} \n${post.data.shorty}`
       };
 
   Twitter.post('statuses/update', params, (err, data, response) => {
