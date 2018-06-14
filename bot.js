@@ -201,7 +201,7 @@ function getTimeline() {
 }
 
 /**
- * Logs the `awwbot` logo in the output
+ * Logs the `reddibot` logo in the output
  * @returns {undefined}
  */
 function printLogo() {
