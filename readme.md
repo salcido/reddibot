@@ -70,6 +70,12 @@ ACCESS_TOKEN_SECRET=XXXXXX
 
 ___
 
+### Built With
+
+* [Node-Fetch](https://github.com/bitinn/node-fetch) - Window.fetch for Node
+* [Sharp](https://github.com/lovell/sharp) - Image processing
+* [Twit](https://github.com/ttezel/twit) - Twitter API client for Node
+
 ### Author
 
 * **Matthew Salcido** - *Initial work* - [salcido](https://github.com/salcido)
