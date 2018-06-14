@@ -34,12 +34,12 @@ ___
 
 ___
 
-#### Prerequisites
+### Prerequisites
 
 * Your own Twitter account with an app created using `https://apps.twitter.com/`.
 
 ```
-* Go to `https://apps.twitter.com/` and click "Create new app".
+* Go to `https://apps.twitter.com/` and click "Create new app"
 * Fill out the form with the required information
 * Click "Create your Twitter application"
 ```
@@ -52,18 +52,18 @@ ACCESS_TOKEN=XXXXXX
 ACCESS_TOKEN_SECRET=XXXXXX
 ```
 
-#### Installation
+### Installation
 
 * `git clone https://github.com/salcido/reddibot.git` (this repository)
 * change into the new directory
 * `npm install`
 
-#### Running / Development
+### Running / Development
 
 * Start the bot:
   * `npm start`
 
-#### Testing
+### Testing
 
 * Running the tests:
   * `npm test`
