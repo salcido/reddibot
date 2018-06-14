@@ -34,15 +34,16 @@ ___
 
 ___
 
+#### Prerequisites
+
+* Your own Twitter account with an app created using `https://apps.twitter.com/`.
+* A `.env` file that contains the API keys provided by Twitter when your app was created.
+
 #### Installation
 
 * `git clone https://github.com/salcido/reddibot.git` (this repository)
 * change into the new directory
 * `npm install`
-
-You will need a Twitter account and you'll need to create a new App on Twitter from `https://apps.twitter.com/`.
-Once the app has been created you'll need to create a `.env` file with the API keys provided by Twitter
-when you created the app.
 
 #### Running / Development
 
@@ -51,7 +52,7 @@ when you created the app.
 
 #### Testing
 
-* Testing the bot:
+* Running the tests:
   * `npm test`
 
 ___
