@@ -37,7 +37,20 @@ ___
 #### Prerequisites
 
 * Your own Twitter account with an app created using `https://apps.twitter.com/`.
-* A `.env` file that contains the API keys provided by Twitter when your app was created.
+
+```
+* Go to `https://apps.twitter.com/` and click "Create new app".
+* Fill out the form with the required information
+* Click "Create your Twitter application"
+```
+* A `.env` file at the root of the application that contains the API keys provided by Twitter when your app was created.
+* Your `.env` file should look something like this (replace XXXXXX with the keys provided by Twitter):
+```
+CONSUMER_KEY=XXXXXX
+CONSUMER_SECRET=XXXXXX
+ACCESS_TOKEN=XXXXXX
+ACCESS_TOKEN_SECRET=XXXXXX
+```
 
 #### Installation
 
