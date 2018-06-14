@@ -35,15 +35,11 @@ describe('Utility unit tests:', () => {
           postB = { data: { subreddit: 'alpha'}};
       assert.equal(alphabetize(postA, postB), 1);
     });
-  });
-  describe('alphabetize', () => {
     it('should return -1 when b > a', () => {
       let postA = { data: { subreddit: 'alpha'}},
           postB = { data: { subreddit: 'zoro'}};
       assert.equal(alphabetize(postA, postB), -1);
     });
-  });
-  describe('alphabetize', () => {
     it('should return 0 when b === a', () => {
       let postA = { data: { subreddit: 'alpha'}},
           postB = { data: { subreddit: 'alpha'}};
