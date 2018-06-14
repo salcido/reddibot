@@ -76,7 +76,7 @@ ___
 
 ### Author
 
-* **Matthew Salcido** - *Initial work* - [salcido](https://github.com/salcido)
+* **Matthew Salcido** - [salcido](https://github.com/salcido)
 
 ### License
 
