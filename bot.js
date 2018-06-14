@@ -141,10 +141,9 @@ function getNextPost() {
 }
 
 /**
- * Gets the top posts from a subreddit
- * and removes any posts that are gifs or videos.
- * Also updates imgur links to point directly to
- * the image on imgur.com
+ * Gets the top posts from the subreddits
+ * and replaces any problematic characters
+ * in the posts' title
  * @returns {method}
  */
 function getPosts() {
@@ -158,7 +157,6 @@ function getPosts() {
   .then(res => res.json())
   .then(json => {
     let posts = json.data.children;
-    // Replace any necessary characters in the title
     posts.forEach(p => p.data.title = sanitizeTitle(p.data.title));
     return posts;
   })
@@ -167,7 +165,7 @@ function getPosts() {
 
 /**
  * Gathers post data, mutates it, then
- * gets twitter timeline data
+ * gets Twitter timeline data
  * @returns {promise}
  */
 function getPostsAndTimeline() {
