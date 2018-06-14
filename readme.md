@@ -69,3 +69,11 @@ ACCESS_TOKEN_SECRET=XXXXXX
   * `npm test`
 
 ___
+
+### Author
+
+* **Matthew Salcido** - *Initial work* - [salcido](https://github.com/salcido)
+
+### License
+
+This project is licensed under the GPL License - see the [LICENSE](LICENSE) file for details
