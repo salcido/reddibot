@@ -13,7 +13,6 @@ const subreddits = {
     'animalsbeingderps',
     'aww',
     'awwducational',
-    'coloringcorruptions',
     'engineeringporn',
     'expectationvsreality',
     'eyebleach',
