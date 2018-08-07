@@ -128,7 +128,7 @@ function getNextPost() {
     console.log(title);
     console.log('queue length: ', queue.length);
 
-    if ( !timeline.some(t => t.text.includes(title.substring(0, 100))) ) {
+    if ( !timeline.some(t => t.text.includes(title.substring(0, 25))) ) {
       // Reset the queue after tweeting so that we're only tweeting
       // the most upvoted, untweeted post every interval
       queue = [];

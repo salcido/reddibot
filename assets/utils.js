@@ -156,6 +156,7 @@ const utils = {
                         .replace(/`/g, '\'')
                         .replace(/&mdash;/g, '-')
                         .replace(/&ndash;/g, '-')
+                        .replace(/ - /g, ' - ')
                         .replace(/&hellip;/g, '...');
   },
   /**
