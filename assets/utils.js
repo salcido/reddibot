@@ -144,7 +144,8 @@ const utils = {
    */
   sanitizeTitle: function(title) {
     return title = title.replace(/\b\.\b/g, '. ')
-                        .replace(/&amp;/g, '&')
+                        .replace(/&amp;/g, 'and')
+                        .replace(/&/g, 'and')
                         .replace(/&gt;/g, '>')
                         .replace(/&lt;/g, '<')
                         .replace(/&quot;/g, '"')
