@@ -145,7 +145,6 @@ const utils = {
   sanitizeTitle: function(title) {
     return title = title.replace(/\b\.\b/g, '. ')
                         .replace(/&amp;/g, 'and')
-                        .replace(/&/g, 'and')
                         .replace(/&gt;/g, '>')
                         .replace(/&lt;/g, '<')
                         .replace(/&quot;/g, '"')
@@ -158,7 +157,8 @@ const utils = {
                         .replace(/&mdash;/g, '-')
                         .replace(/&ndash;/g, '-')
                         .replace(/ - /g, ' - ')
-                        .replace(/&hellip;/g, '...');
+                        .replace(/&hellip;/g, '...')
+                        .replace(/&/g, 'and');
   },
   /**
    * Returns the local time
