@@ -9,7 +9,10 @@
 A Twitter bot that mirrors top posts from various subreddits to twitter.com.
 
 https://twitter.com/reddibot
-___
+
+<a href="https://www.buymeacoffee.com/salcido" rel="nofollow">
+ <img src="https://github.com/salcido/Discogs-Enhancer/blob/master/img/learn/coffee-btn.png" alt="Buy Me A Coffee" style="max-width: 100%;">
+</a>
 
 #### Current subreddits include:
 
