@@ -199,6 +199,9 @@ describe('Utility unit tests:', () => {
 // ========================================================
 // sanitizeTitle
 // ========================================================
+  // Something (Mocaha?) is converting these html entities into their
+  // respective characters before the test runs causing it to fail.
+  // Not sure how to correct at the moment...
   describe('sanitizeTitle', () => {
     it('should replace the characters in the title', () => {
       let title = 'Someone’s long &amp; boring title with a bunch of &quot;bad&quot; characters.oh boy&hellip;';
