@@ -16,6 +16,6 @@
     "twit": "^2.2.11"
   },
   "devDependencies": {
-    "mocha": "^5.2.0"
+    "mocha": "^6.1.4"
   }
 }
